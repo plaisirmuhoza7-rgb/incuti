@@ -113,8 +113,8 @@ function LearningHubContent() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Shakisha isomo (urugero: gusasira, imborera, isuri, udukoko)..."
-            className="block w-full rounded-2xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-xs sm:text-sm text-gray-900 shadow-xs focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
+            placeholder="Shakisha isomo (urugero: gusasira, imborera, isuri)..."
+            className="block w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-8 text-sm text-gray-900 shadow-xs focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
           />
           {searchQuery && (
             <button
@@ -127,7 +127,7 @@ function LearningHubContent() {
         </div>
 
         {/* Category Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar select-none">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -135,10 +135,10 @@ function LearningHubContent() {
                 setSelectedCategory(cat);
                 setActiveTag('');
               }}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition ${
+              className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition active:scale-95 shrink-0 ${
                 selectedCategory === cat && !activeTag
-                  ? 'bg-forest-700 text-white shadow-xs'
-                  : 'bg-white text-gray-700 border border-gray-200 hover:bg-forest-50 hover:border-forest-300'
+                  ? 'bg-[#145726] text-white shadow-xs'
+                  : 'bg-white text-gray-700 border border-gray-200 hover:bg-[#f2f8f2] hover:border-[#145726]'
               }`}
             >
               {cat}
@@ -148,12 +148,12 @@ function LearningHubContent() {
 
         {/* Active Tag indicator */}
         {activeTag && (
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-forest-100 text-forest-800 rounded-full text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-[#145726] rounded-full text-xs font-bold">
             <Tag className="h-3 w-3" />
             <span>Icyiciro cy&apos;Isuzuma: {activeTag}</span>
             <button
               onClick={() => setActiveTag('')}
-              className="hover:text-black font-bold ml-1"
+              className="hover:text-black font-extrabold ml-1"
             >
               ×
             </button>
@@ -164,35 +164,35 @@ function LearningHubContent() {
       {/* Cards Grid */}
       {loading ? (
         <div className="py-16 text-center text-gray-500 text-xs flex items-center justify-center gap-2">
-          <Loader2 className="h-5 w-5 animate-spin text-forest-700" />
+          <Loader2 className="h-5 w-5 animate-spin text-[#145726]" />
           <span>Birimo gupakururwa...</span>
         </div>
       ) : filteredItems.length === 0 ? (
-        <div className="rounded-3xl bg-white border border-gray-200 p-12 text-center text-gray-500">
+        <div className="rounded-2xl bg-white border border-gray-200 p-8 sm:p-12 text-center text-gray-500">
           <BookOpen className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-          <p className="font-bold text-gray-700">Nta somo ribonetse muri iki cyiciro.</p>
+          <p className="font-bold text-gray-700 text-sm">Nta somo ribonetse muri iki cyiciro.</p>
           <button
             onClick={() => {
               setSelectedCategory('Byose');
               setActiveTag('');
               setSearchQuery('');
             }}
-            className="mt-3 text-xs font-bold text-forest-700 underline"
+            className="mt-3 text-xs font-bold text-[#145726] underline"
           >
             Reba amasomo yose
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className="rounded-3xl bg-white border border-forest-100 p-5 shadow-xs hover:shadow-md hover:border-forest-300 transition flex flex-col justify-between group"
+              className="rounded-2xl bg-white border border-gray-200 p-4 sm:p-5 shadow-xs hover:shadow-md hover:border-[#145726] transition flex flex-col justify-between group"
             >
               <div>
                 {/* Category & Tag */}
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-bold uppercase bg-forest-100 text-forest-800 px-2.5 py-0.5 rounded-full">
+                <div className="flex items-center justify-between gap-2 mb-2.5">
+                  <span className="text-[10px] font-black uppercase bg-[#f2f8f2] text-[#145726] px-2 py-0.5 rounded-sm border border-[#d0e8d2]">
                     {item.category}
                   </span>
                   <div className="flex items-center gap-1 text-[10px] text-gray-400">
@@ -202,23 +202,23 @@ function LearningHubContent() {
                 </div>
 
                 {/* Title */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-forest-900 transition leading-snug">
+                <h3 className="font-extrabold text-sm sm:text-base text-gray-900 group-hover:text-[#145726] transition leading-snug">
                   {item.title_kinyarwanda}
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+                <p className="text-xs text-gray-600 mt-1.5 leading-relaxed line-clamp-3">
                   {item.description_kinyarwanda}
                 </p>
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+              <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
                 <button
                   onClick={() => setActiveVideoItem(item)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-forest-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-forest-800 transition active:scale-95"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#145726] px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#0f421d] transition active:scale-95"
                 >
-                  <Play className="h-3.5 w-3.5 fill-current" />
+                  <Play className="h-3.5 w-3.5 fill-current text-[#f5c518]" />
                   <span>Reba Amashusho</span>
                 </button>
 
@@ -226,7 +226,7 @@ function LearningHubContent() {
                   href={item.video_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-500 hover:text-forest-800 transition"
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-gray-500 hover:text-[#145726] transition"
                   title="Fungura ku rubuga rw'amashusho"
                 >
                   <span>Fungura</span>
@@ -240,11 +240,11 @@ function LearningHubContent() {
 
       {/* Video Modal Player */}
       {activeVideoItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-2xl rounded-3xl bg-white overflow-hidden shadow-2xl border border-gray-200">
-            <div className="p-4 bg-gray-900 text-white flex items-center justify-between">
-              <div className="min-w-0 pr-4">
-                <span className="text-[10px] font-bold text-forest-400 uppercase tracking-wider block">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 sm:p-4 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-2xl max-h-[92dvh] overflow-y-auto rounded-2xl bg-white shadow-2xl border border-gray-200">
+            <div className="p-3.5 bg-gray-900 text-white flex items-center justify-between sticky top-0 z-10">
+              <div className="min-w-0 pr-3">
+                <span className="text-[10px] font-bold text-[#f5c518] uppercase tracking-wider block">
                   {activeVideoItem.category}
                 </span>
                 <h3 className="font-bold text-xs sm:text-sm truncate">
@@ -253,7 +253,7 @@ function LearningHubContent() {
               </div>
               <button
                 onClick={() => setActiveVideoItem(null)}
-                className="text-gray-400 hover:text-white p-1 rounded-full bg-white/10"
+                className="text-gray-300 hover:text-white p-1 rounded-full bg-white/10 active:scale-95"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -269,7 +269,7 @@ function LearningHubContent() {
               />
             </div>
 
-            <div className="p-5 bg-white">
+            <div className="p-4 sm:p-5 bg-white">
               <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                 Inshamake y&apos;Isomo:
               </h4>
@@ -280,6 +280,7 @@ function LearningHubContent() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

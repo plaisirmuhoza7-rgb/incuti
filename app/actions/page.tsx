@@ -309,34 +309,34 @@ export default function ActionTrackerPage() {
 
       {/* Modal to Log a New Action */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 md:p-8 shadow-2xl border border-forest-100 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-lg rounded-2xl bg-white p-5 sm:p-8 shadow-2xl border border-gray-200 max-h-[90dvh] overflow-y-auto">
             <button
               onClick={() => setShowAddModal(false)}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 p-1"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <div className="flex items-center gap-3 mb-5">
-              <div className="h-10 w-10 rounded-xl bg-forest-100 text-forest-700 flex items-center justify-center">
-                <CheckSquare className="h-6 w-6" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-[#145726] text-white flex items-center justify-center shrink-0">
+                <CheckSquare className="h-5 w-5 text-[#f5c518]" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Andika Igikorwa Cyakozwe</h3>
-                <p className="text-xs text-gray-500">Kubika amakuru muri Google Sheets</p>
+                <h3 className="text-base sm:text-lg font-black text-gray-900 leading-tight">Andika Igikorwa Cyakozwe</h3>
+                <p className="text-[11px] text-gray-500">Kubika amakuru muri Google Sheets</p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                <label className="block text-xs font-bold text-gray-700 mb-1">
                   Ubwoko bw&apos;Igikorwa (Action Type) *
                 </label>
                 <select
                   value={actionType}
                   onChange={(e) => setActionType(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-xs sm:text-sm text-gray-900 focus:border-forest-600 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none"
                   required
                 >
                   {COMMON_CONSERVATION_ACTIONS.map((a) => (
@@ -348,26 +348,26 @@ export default function ActionTrackerPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                <label className="block text-xs font-bold text-gray-700 mb-1">
                   Ubusobanuro cyangwa Inyandiko (Description)
                 </label>
                 <textarea
                   rows={3}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="urugero: Nasasiye umurima wose w'ibigori nkoresheje ibyatsi byumye by'ibisheke..."
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-xs sm:text-sm text-gray-900 focus:border-forest-600 focus:outline-none"
+                  placeholder="urugero: Nasasiye umurima wose w'ibigori nkoresheje ibyatsi byumye..."
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                <label className="block text-xs font-bold text-gray-700 mb-1">
                   Imiterere y&apos;Igikorwa (Status)
                 </label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-xs sm:text-sm text-gray-900 focus:border-forest-600 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none"
                 >
                   <option value="Byarangiye">Byarangiye (Completed)</option>
                   <option value="Birakomeza">Birakomeza (In Progress)</option>
@@ -376,7 +376,7 @@ export default function ActionTrackerPage() {
 
               {/* Photo Upload */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                <label className="block text-xs font-bold text-gray-700 mb-1">
                   Ifoto y&apos;Igikorwa (Optional Photo Proof)
                 </label>
 
@@ -403,30 +403,30 @@ export default function ActionTrackerPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full rounded-xl border border-dashed border-gray-300 p-4 text-center text-xs text-gray-600 hover:border-forest-400 hover:bg-forest-50/30 transition flex items-center justify-center gap-2"
+                    className="w-full rounded-xl border border-dashed border-gray-300 p-3.5 text-center text-xs font-semibold text-gray-600 hover:border-[#145726] hover:bg-[#f2f8f2] transition flex items-center justify-center gap-2"
                   >
-                    <Camera className="h-4 w-4 text-forest-700" />
+                    <Camera className="h-4 w-4 text-[#145726]" />
                     <span>Fata ifoto cyangwa kanda hano uhitemo</span>
                   </button>
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="rounded-xl border border-gray-300 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50"
+                  className="rounded-xl border border-gray-300 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50"
                 >
                   Kureka
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center gap-2 rounded-xl bg-forest-700 px-5 py-2 text-xs font-bold text-white shadow hover:bg-forest-800 transition disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] px-5 py-2.5 text-xs sm:text-sm font-black text-white shadow hover:bg-[#0f421d] transition active:scale-95 disabled:opacity-50"
                 >
                   {submitting ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" />
                       <span>Birimo kubikwa...</span>
                     </>
                   ) : (
@@ -441,3 +441,4 @@ export default function ActionTrackerPage() {
     </div>
   );
 }
+

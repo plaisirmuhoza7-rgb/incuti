@@ -142,17 +142,17 @@ export default function MyFarmPage() {
 
       {/* Farm Profile Display Card (when saved and not currently editing) */}
       {farm && !isEditing && (
-        <div className="rounded-3xl bg-white border border-forest-100 p-6 shadow-sm space-y-5">
-          <div className="flex items-center justify-between">
+        <div className="rounded-2xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-forest-100 text-forest-700 flex items-center justify-center">
-                <Sprout className="h-7 w-7" />
+              <div className="h-11 w-11 rounded-xl bg-[#145726] text-white flex items-center justify-center shrink-0">
+                <Sprout className="h-6 w-6 text-[#f5c518]" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">
+                <h2 className="text-base sm:text-lg font-black text-gray-900 leading-tight">
                   Umurima wo muri {farm.district}
                 </h2>
-                <p className="text-xs text-gray-500">
+                <p className="text-[11px] text-gray-500">
                   Wanditswe ku: {new Date(farm.created_at).toLocaleDateString()}
                 </p>
               </div>
@@ -160,43 +160,43 @@ export default function MyFarmPage() {
 
             <button
               onClick={() => setIsEditing(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2 text-xs font-bold text-gray-700 hover:bg-gray-100 transition"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 transition active:scale-95 shrink-0"
             >
               <Edit3 className="h-3.5 w-3.5" />
               <span>Hindura</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-100 text-sm">
-            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-              <span className="text-xs font-semibold text-gray-500 block">Aho uherereye:</span>
-              <p className="font-bold text-gray-900 flex items-center gap-1.5 mt-1">
-                <MapPin className="h-4 w-4 text-forest-700" />
-                {farm.district} — {farm.location_text}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-gray-100 text-xs sm:text-sm">
+            <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Aho uherereye:</span>
+              <p className="font-extrabold text-gray-900 flex items-center gap-1.5 mt-1">
+                <MapPin className="h-4 w-4 text-[#145726] shrink-0" />
+                <span>{farm.district} — {farm.location_text}</span>
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-              <span className="text-xs font-semibold text-gray-500 block">Ubuso bw&apos;Umurima:</span>
-              <p className="font-bold text-gray-900 flex items-center gap-1.5 mt-1">
-                <Maximize2 className="h-4 w-4 text-forest-700" />
-                {farm.area_ha} Hectares (Ha)
+            <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Ubuso bw&apos;Umurima:</span>
+              <p className="font-extrabold text-gray-900 flex items-center gap-1.5 mt-1">
+                <Maximize2 className="h-4 w-4 text-[#145726] shrink-0" />
+                <span>{farm.area_ha} Hectares (Ha)</span>
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-              <span className="text-xs font-semibold text-gray-500 block">Ibihingwa by&apos;ibanze:</span>
-              <p className="font-bold text-gray-900 flex items-center gap-1.5 mt-1">
-                <Layers className="h-4 w-4 text-forest-700" />
-                {farm.crops}
+            <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Ibihingwa by&apos;ibanze:</span>
+              <p className="font-extrabold text-gray-900 flex items-center gap-1.5 mt-1">
+                <Layers className="h-4 w-4 text-[#145726] shrink-0" />
+                <span>{farm.crops}</span>
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-              <span className="text-xs font-semibold text-gray-500 block">Guhuza Ibihingwa (Intercrop):</span>
-              <p className="font-bold text-forest-800 flex items-center gap-1.5 mt-1">
-                <CheckCircle2 className="h-4 w-4 text-forest-700" />
-                {farm.intercrop}
+            <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Guhuza Ibihingwa (Intercrop):</span>
+              <p className="font-extrabold text-[#145726] flex items-center gap-1.5 mt-1">
+                <CheckCircle2 className="h-4 w-4 text-[#145726] shrink-0" />
+                <span>{farm.intercrop}</span>
               </p>
             </div>
           </div>
@@ -205,21 +205,21 @@ export default function MyFarmPage() {
 
       {/* Edit or Create Farm Form */}
       {(isEditing || !farm) && (
-        <form onSubmit={handleSubmit} className="rounded-3xl bg-white border border-forest-100 p-6 md:p-8 shadow-sm space-y-5">
-          <h2 className="text-base font-bold text-gray-900">
+        <form onSubmit={handleSubmit} className="rounded-2xl bg-white border border-gray-200 p-5 md:p-8 shadow-sm space-y-4">
+          <h2 className="text-base sm:text-lg font-black text-gray-900">
             {farm ? 'Hindura Amakuru y\'Umurima' : 'Injiza Amakuru Mashya y\'Umurima'}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* District */}
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              <label className="block text-xs font-bold text-gray-700 mb-1">
                 Akarere (District) *
               </label>
               <select
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
                 required
               >
                 {RWANDA_DISTRICTS.map((d) => (
@@ -232,7 +232,7 @@ export default function MyFarmPage() {
 
             {/* Location text */}
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              <label className="block text-xs font-bold text-gray-700 mb-1">
                 Umurenge / Akagari / Icyaro *
               </label>
               <input
@@ -240,14 +240,14 @@ export default function MyFarmPage() {
                 value={locationText}
                 onChange={(e) => setLocationText(e.target.value)}
                 placeholder="urugero: Umurenge wa Kinigi, Akagari ka Nyange"
-                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
                 required
               />
             </div>
 
             {/* Area */}
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              <label className="block text-xs font-bold text-gray-700 mb-1">
                 Ubuso bw&apos;Umurima muri Hectares (Ha) *
               </label>
               <input
@@ -257,20 +257,20 @@ export default function MyFarmPage() {
                 value={areaHa}
                 onChange={(e) => setAreaHa(e.target.value)}
                 placeholder="0.5"
-                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
                 required
               />
             </div>
 
             {/* Intercrop */}
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              <label className="block text-xs font-bold text-gray-700 mb-1">
                 Ese uhuza ibihingwa mu murima umwe?
               </label>
               <select
                 value={intercrop}
                 onChange={(e) => setIntercrop(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
               >
                 <option value="Yego (Ibigori n'ibishyimbo)">Yego (Ibigori n&apos;ibishyimbo)</option>
                 <option value="Yego (Ibinyamisogwe n'imyumbati)">Yego (Ibinyamisogwe n&apos;imyumbati)</option>
@@ -282,7 +282,7 @@ export default function MyFarmPage() {
 
           {/* Crops */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1.5">
+            <label className="block text-xs font-bold text-gray-700 mb-1">
               Ibihingwa bihingwa muri uyu murima
             </label>
             <input
@@ -290,7 +290,7 @@ export default function MyFarmPage() {
               value={crops}
               onChange={(e) => setCrops(e.target.value)}
               placeholder="urugero: Ibigori, Ibishyimbo, Soya"
-              className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600 mb-2"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726] mb-2"
             />
             {/* Quick badges */}
             <div className="flex flex-wrap gap-1.5">
@@ -308,10 +308,10 @@ export default function MyFarmPage() {
                         setCrops(crops ? `${crops}, ${name}` : name);
                       }
                     }}
-                    className={`text-[11px] px-2.5 py-1 rounded-full border transition ${
+                    className={`text-[11px] px-2.5 py-1 rounded-full border transition active:scale-95 ${
                       isSelected
-                        ? 'bg-forest-700 text-white border-forest-700 font-bold'
-                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-forest-300'
+                        ? 'bg-[#145726] text-white border-[#145726] font-bold'
+                        : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-[#145726]'
                     }`}
                   >
                     {c}
@@ -321,7 +321,7 @@ export default function MyFarmPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
             {farm && (
               <button
                 type="button"
@@ -335,16 +335,16 @@ export default function MyFarmPage() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-xl bg-forest-700 px-6 py-2.5 text-xs font-bold text-white shadow hover:bg-forest-800 transition disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] px-6 py-3 text-xs sm:text-sm font-black text-white shadow hover:bg-[#0f421d] transition active:scale-95 disabled:opacity-50"
             >
               {saving ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" />
                   <span>Birimo kubikwa...</span>
                 </>
               ) : (
                 <>
-                  <Save className="h-4 w-4" />
+                  <Save className="h-4 w-4 text-[#f5c518]" />
                   <span>Bika Umurima</span>
                 </>
               )}
@@ -352,6 +352,7 @@ export default function MyFarmPage() {
           </div>
         </form>
       )}
+
     </div>
   );
 }

@@ -44,27 +44,27 @@ export default function AuthModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-forest-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-md rounded-2xl bg-white p-5 sm:p-6 shadow-2xl border border-gray-200 max-h-[90dvh] overflow-y-auto">
         <button
           onClick={() => setShowAuthModal(false)}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+          className="absolute right-3.5 top-3.5 text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition"
           aria-label="Funga"
         >
           <X className="h-5 w-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-forest-100 text-forest-700">
-            <Sprout className="h-7 w-7" />
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#145726] text-white shrink-0">
+            <Sprout className="h-6 w-6 text-[#f5c518]" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Injira muri Incuti</h2>
-            <p className="text-xs text-forest-700 font-medium">Ubuhinzi Bubungabunga Ubutaka</p>
+            <h2 className="text-lg sm:text-xl font-black text-gray-900 leading-tight">Injira muri Incuti</h2>
+            <p className="text-xs text-[#145726] font-bold">Ubuhinzi Bubungabunga Ubutaka</p>
           </div>
         </div>
 
-        <p className="mb-5 text-sm text-gray-600">
+        <p className="mb-4 text-xs sm:text-sm text-gray-600 leading-relaxed">
           Shyiramo amazina yawe na numero ya telefone kugira ngo utangire gusesengura umurima,
           kubika ibikorwa no kubaza <strong>Incuti Bot</strong>.
         </p>
@@ -75,12 +75,12 @@ export default function AuthModal() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
+            <label className="block text-xs font-bold text-gray-700 mb-1">
               Amazina yawe
             </label>
-            <div className="relative rounded-lg shadow-sm">
+            <div className="relative rounded-lg shadow-2xs">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <UserIcon className="h-4 w-4 text-gray-400" />
               </div>
@@ -89,17 +89,17 @@ export default function AuthModal() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="urugero: Kwizera Jean"
-                className="block w-full rounded-xl border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600 bg-gray-50/50"
+                className="block w-full rounded-xl border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726] bg-gray-50/50"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
+            <label className="block text-xs font-bold text-gray-700 mb-1">
               Nimero ya Telefone
             </label>
-            <div className="relative rounded-lg shadow-sm">
+            <div className="relative rounded-lg shadow-2xs">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <Phone className="h-4 w-4 text-gray-400" />
               </div>
@@ -108,7 +108,7 @@ export default function AuthModal() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="urugero: 0788 123 456"
-                className="block w-full rounded-xl border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600 bg-gray-50/50"
+                className="block w-full rounded-xl border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726] bg-gray-50/50"
                 required
               />
             </div>
@@ -117,11 +117,11 @@ export default function AuthModal() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-forest-700 py-3 text-sm font-semibold text-white shadow-md hover:bg-forest-800 transition active:scale-[0.98] disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] py-3 text-sm font-black text-white shadow hover:bg-[#0f421d] transition active:scale-[0.98] disabled:opacity-50"
           >
             {loading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" />
                 <span>Birimo kwinjira...</span>
               </>
             ) : (
@@ -130,14 +130,14 @@ export default function AuthModal() {
           </button>
         </form>
 
-        <div className="mt-4 pt-4 border-t border-gray-100">
+        <div className="mt-4 pt-3.5 border-t border-gray-100">
           <button
             type="button"
             onClick={handleQuickDemo}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-forest-300 bg-forest-50 py-2.5 text-xs font-semibold text-forest-800 hover:bg-forest-100 transition"
+            className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#145726]/30 bg-[#f2f8f2] py-2.5 text-xs font-black text-[#145726] hover:bg-green-100 transition active:scale-[0.98]"
           >
-            <Sparkles className="h-4 w-4 text-forest-600" />
+            <Sparkles className="h-4 w-4 text-[#145726]" />
             <span>Konti y&apos;Icyitegererezo (Demo Farmer)</span>
           </button>
         </div>
@@ -145,3 +145,4 @@ export default function AuthModal() {
     </div>
   );
 }
+

@@ -120,62 +120,62 @@ export default function IncutiChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-130px)] md:h-[calc(100vh-110px)] max-w-4xl mx-auto animate-fade-in">
+    <div className="flex flex-col h-[calc(100dvh-150px)] md:h-[calc(100vh-110px)] max-w-4xl mx-auto animate-fade-in border border-gray-200 rounded-2xl bg-white shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-forest-100 bg-white p-4 rounded-t-3xl shadow-xs">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between border-b border-forest-100 bg-white p-3.5 sm:p-4 shrink-0">
+        <div className="flex items-center gap-2.5">
           <div className="relative">
-            <div className="h-10 w-10 rounded-2xl bg-forest-700 text-white flex items-center justify-center shadow-xs">
-              <Bot className="h-6 w-6" />
+            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-forest-700 text-white flex items-center justify-center shadow-xs">
+              <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-[#f5c518]" />
             </div>
-            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white" />
+            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-white" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-gray-900 flex items-center gap-1.5">
+            <h1 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-1.5 leading-tight">
               <span>Incuti Bot</span>
-              <span className="text-[10px] font-bold uppercase bg-forest-100 text-forest-800 px-2 py-0.5 rounded-full">
-                Umuhinzi Helper
+              <span className="text-[9px] font-bold uppercase bg-forest-100 text-forest-800 px-2 py-0.5 rounded-full">
+                Kinyarwanda AI
               </span>
             </h1>
-            <p className="text-xs text-gray-500">Ibisubizo ngiro mu Kinyarwanda</p>
+            <p className="text-[11px] text-gray-500">Ibisubizo ngiro ku buhinzi</p>
           </div>
         </div>
 
         <Link
           href="/learn"
-          className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-forest-700 bg-forest-50 px-3 py-1.5 rounded-xl border border-forest-200 hover:bg-forest-100 transition"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-forest-700 bg-forest-50 px-2.5 py-1.5 rounded-lg border border-forest-200 hover:bg-forest-100 transition"
         >
-          <BookOpen className="h-3.5 w-3.5" />
-          <span>Amasomo</span>
+          <BookOpen className="h-3.5 w-3.5 text-[#145726]" />
+          <span className="hidden sm:inline">Amasomo</span>
         </Link>
       </div>
 
       {/* Messages Thread Container */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-gray-50/60">
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex items-end gap-2.5 ${
+            className={`flex items-end gap-2 ${
               msg.sender === 'user' ? 'justify-end' : 'justify-start'
             }`}
           >
             {msg.sender === 'incuti' && (
-              <div className="h-8 w-8 rounded-xl bg-forest-700 text-white flex items-center justify-center shrink-0 mb-1">
-                <Sprout className="h-4 w-4" />
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-forest-700 text-white flex items-center justify-center shrink-0 mb-1">
+                <Sprout className="h-3.5 w-3.5 text-[#f5c518]" />
               </div>
             )}
 
             <div
-              className={`max-w-[85%] sm:max-w-lg rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm leading-relaxed shadow-xs ${
+              className={`max-w-[88%] sm:max-w-lg rounded-2xl p-3 sm:p-4 text-xs sm:text-sm leading-relaxed shadow-xs ${
                 msg.sender === 'user'
-                  ? 'bg-forest-700 text-white rounded-br-none'
-                  : 'bg-white text-gray-900 border border-gray-100 rounded-bl-none'
+                  ? 'bg-[#145726] text-white rounded-br-none'
+                  : 'bg-white text-gray-900 border border-gray-200 rounded-bl-none'
               }`}
             >
               <div className="whitespace-pre-line">{msg.text}</div>
               <div
-                className={`text-[10px] mt-1.5 text-right ${
-                  msg.sender === 'user' ? 'text-forest-200' : 'text-gray-400'
+                className={`text-[9px] sm:text-[10px] mt-1 text-right ${
+                  msg.sender === 'user' ? 'text-green-200' : 'text-gray-400'
                 }`}
               >
                 {msg.timestamp}
@@ -183,20 +183,20 @@ export default function IncutiChatPage() {
             </div>
 
             {msg.sender === 'user' && (
-              <div className="h-8 w-8 rounded-xl bg-forest-100 text-forest-800 flex items-center justify-center shrink-0 mb-1">
-                <User className="h-4 w-4" />
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-forest-100 text-forest-800 flex items-center justify-center shrink-0 mb-1">
+                <User className="h-3.5 w-3.5 text-[#145726]" />
               </div>
             )}
           </div>
         ))}
 
         {loading && (
-          <div className="flex items-end gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-forest-700 text-white flex items-center justify-center shrink-0">
-              <Sprout className="h-4 w-4" />
+          <div className="flex items-end gap-2">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-forest-700 text-white flex items-center justify-center shrink-0">
+              <Sprout className="h-3.5 w-3.5 text-[#f5c518]" />
             </div>
-            <div className="bg-white rounded-2xl rounded-bl-none p-3.5 border border-gray-100 shadow-xs flex items-center gap-2 text-xs text-gray-500">
-              <Loader2 className="h-4 w-4 animate-spin text-forest-700" />
+            <div className="bg-white rounded-2xl rounded-bl-none p-3 border border-gray-200 shadow-xs flex items-center gap-2 text-xs text-gray-600">
+              <Loader2 className="h-4 w-4 animate-spin text-[#145726]" />
               <span>Incuti Bot irimo gutegura igisubizo...</span>
             </div>
           </div>
@@ -206,9 +206,9 @@ export default function IncutiChatPage() {
       </div>
 
       {/* Suggested Quick Questions */}
-      <div className="bg-white border-t border-gray-100 px-3 py-2 overflow-x-auto">
-        <div className="flex items-center gap-2 no-scrollbar">
-          <span className="text-[11px] font-bold text-gray-400 whitespace-nowrap flex items-center gap-1">
+      <div className="bg-white border-t border-gray-100 px-3 py-2 overflow-x-auto no-scrollbar shrink-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] font-bold text-gray-400 whitespace-nowrap flex items-center gap-1 shrink-0">
             <Sparkles className="h-3 w-3 text-forest-600" />
             Inama:
           </span>
@@ -217,7 +217,7 @@ export default function IncutiChatPage() {
               key={idx}
               disabled={loading}
               onClick={() => handleSendMessage(q)}
-              className="text-[11px] px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-forest-50 hover:text-forest-800 border border-gray-200 whitespace-nowrap transition"
+              className="text-[11px] px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-forest-50 hover:text-forest-800 border border-gray-200 whitespace-nowrap transition active:scale-95 shrink-0 font-medium"
             >
               {q}
             </button>
@@ -226,7 +226,7 @@ export default function IncutiChatPage() {
       </div>
 
       {/* Message Input Box */}
-      <div className="bg-white p-3 border-t border-forest-100 rounded-b-3xl shadow-sm">
+      <div className="bg-white p-2.5 sm:p-3 border-t border-gray-200 shrink-0">
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -234,20 +234,21 @@ export default function IncutiChatPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={loading}
-            placeholder="Baza ikibazo ku buhinzi bwawe mu Kinyarwanda..."
-            className="flex-1 rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-xs sm:text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
+            placeholder="Baza ikibazo mu Kinyarwanda..."
+            className="flex-1 rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 py-2.5 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
           />
 
           <button
             onClick={() => handleSendMessage()}
             disabled={loading || !input.trim()}
-            className="h-10 w-10 rounded-xl bg-forest-700 text-white flex items-center justify-center hover:bg-forest-800 transition active:scale-95 disabled:opacity-50 shrink-0"
+            className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-[#145726] text-white flex items-center justify-center hover:bg-[#0f421d] transition active:scale-95 disabled:opacity-50 shrink-0 shadow-xs"
             title="Ohereza"
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" /> : <Send className="h-4 w-4 text-[#f5c518]" />}
           </button>
         </div>
       </div>
     </div>
   );
 }
+

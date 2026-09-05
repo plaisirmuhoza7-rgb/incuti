@@ -186,18 +186,19 @@ export default function FarmScanPage() {
       </div>
 
       {/* Main Upload / Analysis Card */}
-      <div className="rounded-3xl bg-white border border-forest-100 p-5 md:p-8 shadow-sm">
+      <div className="rounded-2xl bg-white border border-forest-100 p-4 sm:p-6 md:p-8 shadow-sm">
         {!selectedImage ? (
-          <div className="space-y-5">
+          <div className="space-y-4 sm:space-y-5">
             {/* Dropzone & Buttons */}
-            <div className="border-2 border-dashed border-forest-200 rounded-2xl p-6 sm:p-10 text-center hover:border-forest-400 transition bg-forest-50/20">
-              <div className="h-16 w-16 mx-auto rounded-2xl bg-forest-100 text-forest-700 flex items-center justify-center mb-4 shadow-xs">
-                <Camera className="h-8 w-8" />
+            <div className="border-2 border-dashed border-[#145726]/30 rounded-2xl p-5 sm:p-10 text-center hover:border-[#145726] transition bg-[#f2f8f2]">
+              <div className="h-14 w-14 sm:h-16 sm:w-16 mx-auto rounded-2xl bg-[#145726] text-white flex items-center justify-center mb-3 sm:mb-4 shadow-xs relative">
+                <Camera className="h-7 w-7 sm:h-8 sm:w-8" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-[#f5c518] border-2 border-white" />
               </div>
-              <h3 className="text-base font-bold text-gray-900 mb-1">
+              <h3 className="text-sm sm:text-base font-black text-gray-900 mb-1">
                 Fata Ifoto cyangwa Hitamo mu Bubiko
               </h3>
-              <p className="text-xs text-gray-500 max-w-md mx-auto mb-6">
+              <p className="text-xs text-gray-600 max-w-md mx-auto mb-5 leading-relaxed">
                 Ifoto yerekana ubutaka, imyaka, gusasira cyangwa ibimenyetso by&apos;isuri ifasha AI gukora isuzuma ryizewe.
               </p>
 
@@ -222,18 +223,18 @@ export default function FarmScanPage() {
                 <button
                   type="button"
                   onClick={() => cameraInputRef.current?.click()}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-forest-700 px-6 py-3 text-sm font-bold text-white shadow hover:bg-forest-800 transition active:scale-95"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-3 border-[#f5c518] px-6 py-3.5 text-xs sm:text-sm font-black text-white shadow hover:bg-[#0f421d] transition active:scale-95"
                 >
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-4 w-4 text-[#f5c518]" />
                   <span>Fata Ifoto n&apos;Aparaye (Camera)</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-xs sm:text-sm font-bold text-gray-700 hover:bg-gray-50 transition active:scale-95"
                 >
-                  <Upload className="h-4 w-4" />
+                  <Upload className="h-4 w-4 text-gray-600" />
                   <span>Hitamo Ifoto (Gallery)</span>
                 </button>
               </div>
@@ -241,19 +242,19 @@ export default function FarmScanPage() {
 
             {/* Quick Demo Sample Photos */}
             <div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 mb-2.5">
-                <Sparkles className="h-3.5 w-3.5 text-forest-600" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-gray-700 mb-2">
+                <Sparkles className="h-3.5 w-3.5 text-[#145726]" />
                 <span>Cyangwa gerageza n&apos;ifoto y&apos;icyitegererezo (Demo Samples):</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {SAMPLE_IMAGES.map((sample, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => selectSampleImage(sample.url)}
-                    className="flex items-center gap-3 p-2.5 rounded-xl border border-gray-200 hover:border-forest-400 hover:bg-forest-50/50 transition text-left group"
+                    className="flex items-center gap-3 p-2.5 rounded-xl border border-gray-200 hover:border-[#145726] hover:bg-[#f2f8f2] transition text-left group bg-white shadow-2xs"
                   >
-                    <div className="relative h-12 w-12 rounded-lg overflow-hidden shrink-0 bg-gray-100">
+                    <div className="relative h-12 w-12 rounded-lg overflow-hidden shrink-0 bg-gray-100 border border-gray-200">
                       <img
                         src={sample.url}
                         alt={sample.label}
@@ -261,7 +262,7 @@ export default function FarmScanPage() {
                       />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-gray-900 group-hover:text-forest-800 truncate">
+                      <p className="text-xs font-bold text-gray-900 group-hover:text-[#145726] truncate">
                         {sample.label}
                       </p>
                       <p className="text-[11px] text-gray-500 truncate">{sample.description}</p>
