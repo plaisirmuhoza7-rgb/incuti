@@ -2,17 +2,15 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useLanguage } from '@/components/LanguageContext';
 import {
   BookOpen,
   Play,
-  Filter,
   Tag,
   ExternalLink,
-  Sparkles,
   Loader2,
   X,
   Search,
-  CheckCircle2
 } from 'lucide-react';
 import { LearningContentItem } from '@/lib/types';
 
@@ -31,6 +29,7 @@ const CATEGORIES = [
 function LearningHubContent() {
   const searchParams = useSearchParams();
   const initialTag = searchParams.get('tag') || '';
+  const { t } = useLanguage();
 
   const [items, setItems] = useState<LearningContentItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,9 +95,9 @@ function LearningHubContent() {
           <BookOpen className="h-4 w-4" />
           <span>Conservation Learning Hub</span>
         </div>
-        <h1 className="text-2xl font-black text-gray-900">Amasomo y&apos;Ubuhinzi Bubungabunga Ubutaka</h1>
+        <h1 className="text-2xl font-black text-gray-900">{t.learn.title}</h1>
         <p className="text-xs sm:text-sm text-gray-600">
-          Amasomo akubiyemo amashusho n&apos;inyandiko ngiro zo kwita ku butaka: gusasira, ifumbire y&apos;imborera, imiringoti n&apos;ibihingwa bivanze.
+          {t.learn.subtitle}
         </p>
       </div>
 
@@ -113,7 +112,7 @@ function LearningHubContent() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Shakisha isomo (urugero: gusasira, imborera, isuri)..."
+            placeholder={t.learn.searchPlaceholder}
             className="block w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-8 text-sm text-gray-900 shadow-xs focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
           />
           {searchQuery && (
@@ -141,7 +140,7 @@ function LearningHubContent() {
                   : 'bg-white text-gray-700 border border-gray-200 hover:bg-[#f2f8f2] hover:border-[#145726]'
               }`}
             >
-              {cat}
+              {cat === 'Byose' ? t.learn.categoryAll : cat}
             </button>
           ))}
         </div>
@@ -150,7 +149,7 @@ function LearningHubContent() {
         {activeTag && (
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-[#145726] rounded-full text-xs font-bold">
             <Tag className="h-3 w-3" />
-            <span>Icyiciro cy&apos;Isuzuma: {activeTag}</span>
+            <span>{t.learn.filterTag} {activeTag}</span>
             <button
               onClick={() => setActiveTag('')}
               className="hover:text-black font-extrabold ml-1"
@@ -165,12 +164,12 @@ function LearningHubContent() {
       {loading ? (
         <div className="py-16 text-center text-gray-500 text-xs flex items-center justify-center gap-2">
           <Loader2 className="h-5 w-5 animate-spin text-[#145726]" />
-          <span>Birimo gupakururwa...</span>
+          <span>{t.learn.loading}</span>
         </div>
       ) : filteredItems.length === 0 ? (
         <div className="rounded-2xl bg-white border border-gray-200 p-8 sm:p-12 text-center text-gray-500">
           <BookOpen className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-          <p className="font-bold text-gray-700 text-sm">Nta somo ribonetse muri iki cyiciro.</p>
+          <p className="font-bold text-gray-700 text-sm">{t.learn.noLessons}</p>
           <button
             onClick={() => {
               setSelectedCategory('Byose');
@@ -179,7 +178,7 @@ function LearningHubContent() {
             }}
             className="mt-3 text-xs font-bold text-[#145726] underline"
           >
-            Reba amasomo yose
+            {t.learn.viewAllLessons}
           </button>
         </div>
       ) : (
@@ -219,7 +218,7 @@ function LearningHubContent() {
                   className="inline-flex items-center gap-1.5 rounded-lg bg-[#145726] px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#0f421d] transition active:scale-95"
                 >
                   <Play className="h-3.5 w-3.5 fill-current text-[#f5c518]" />
-                  <span>Reba Amashusho</span>
+                  <span>{t.learn.watchVideo}</span>
                 </button>
 
                 <a
@@ -227,9 +226,9 @@ function LearningHubContent() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-[11px] font-bold text-gray-500 hover:text-[#145726] transition"
-                  title="Fungura ku rubuga rw'amashusho"
+                  title="Open video link"
                 >
-                  <span>Fungura</span>
+                  <span>{t.learn.openSource}</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>
               </div>
@@ -271,7 +270,7 @@ function LearningHubContent() {
 
             <div className="p-4 sm:p-5 bg-white">
               <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
-                Inshamake y&apos;Isomo:
+                {t.learn.summary}
               </h4>
               <p className="text-xs sm:text-sm text-gray-800 leading-relaxed">
                 {activeVideoItem.description_kinyarwanda}
@@ -291,7 +290,7 @@ export default function LearningHubPage() {
       fallback={
         <div className="py-16 text-center text-gray-500 text-xs flex items-center justify-center gap-2">
           <Loader2 className="h-5 w-5 animate-spin text-forest-700" />
-          <span>Birimo gupakururwa...</span>
+          <span>Loading...</span>
         </div>
       }
     >

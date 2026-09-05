@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { askIncutiChat } from '@/lib/gemini';
+import { askIncutiChat, removeAsterisks } from '@/lib/gemini';
 import { getLearningContent, saveChatLog } from '@/lib/sheets';
 import { v4 as uuidv4 } from 'uuid';
 import { ChatLogRecord } from '@/lib/types';
@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
     const availableTitles = learningItems.map((item) => item.title_kinyarwanda);
 
     // Call Gemini chat assistant as "Incuti"
-    const answer = await askIncutiChat(question.trim(), availableTitles);
+    const rawAnswer = await askIncutiChat(question.trim(), availableTitles);
+    const answer = removeAsterisks(rawAnswer);
 
     // Log Q&A to Google Sheets ChatLogs tab
     const chatLog: ChatLogRecord = {

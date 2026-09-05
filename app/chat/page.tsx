@@ -2,17 +2,16 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/components/AuthContext';
+import { useLanguage } from '@/components/LanguageContext';
 import {
-  MessageSquare,
   Send,
   Sparkles,
   Bot,
   User,
   Loader2,
   BookOpen,
-  ArrowRight,
   Sprout,
-  HelpCircle
+  Globe
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,21 +22,33 @@ interface Message {
   timestamp: string;
 }
 
-const SUGGESTED_QUESTIONS = [
+const SUGGESTED_QUESTIONS_KINYARWANDA = [
   'Nteye ibigori, nasasira nte mu murima wanjye?',
   'Ubutaka bwanjye burimo isuri y\'amazi, nakora iki?',
   'Nakorana nte ifumbire y\'imborera iboze neza?',
   'Ese guhuza ibishyimbo n\'ibigori byongera ifumbire?'
 ];
 
+const SUGGESTED_QUESTIONS_ENGLISH = [
+  'How do I mulch my maize plot to conserve water?',
+  'My field has soil erosion issues, what steps should I take?',
+  'How do I make high quality organic compost manure?',
+  'Does intercropping beans with corn increase soil nitrogen?'
+];
+
 export default function IncutiChatPage() {
   const { user, setShowAuthModal } = useAuth();
+  const { t, language } = useLanguage();
+
+  const initialWelcome = language === 'en'
+    ? `Hello dear farmer! I am Incuti Bot, your AI assistant for conservation agriculture in Rwanda.\nMy answers are generated in **BOTH English and Kinyarwanda**.\n\nAsk me any question about mulching, terracing, soil cover, compost manure, or crop health!`
+    : `Muraho neza muhinzi mwiza! Ndi Incuti Bot, umufasha wawe w'ubwenge buhangano (AI) mu buhinzi bubungabunga ubutaka mu Rwanda.\nIbisubizo byanjye bitangwa mu **Kinyarwanda n'Icyongereza (English & Kinyarwanda)**.\n\nMbaza ikibazo icyo ari cyo cyose ku gusasira, kurwanya isuri, ifumbire cyangwa imyaka yawe!`;
 
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
       sender: 'incuti',
-      text: 'Muraho neza muhinzi mwiza! Ndi Incuti Bot, umufasha wawe w\'ubwenge buhangano (AI) mu buhinzi bubungabunga ubutaka mu Rwanda. Mbaza ikibazo icyo ari cyo cyose ku gusasira, kurwanya isuri, ifumbire cyangwa imyaka yawe!',
+      text: initialWelcome,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -92,7 +103,7 @@ export default function IncutiChatPage() {
       const botMessage: Message = {
         id: 'bot_' + Date.now(),
         sender: 'incuti',
-        text: data.answer,
+        text: (data.answer || '').trim(),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
@@ -103,7 +114,9 @@ export default function IncutiChatPage() {
         {
           id: 'error_' + Date.now(),
           sender: 'incuti',
-          text: 'Ihanganire, habaye ikibazo mu kubona igisubizo. Ongera ugerageze akanya gato.',
+          text: language === 'en'
+            ? 'Sorry, a network connection error occurred. Please try again.'
+            : 'Ihanganire, habaye ikibazo mu kubona igisubizo. Ongera ugerageze akanya gato.',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -119,25 +132,30 @@ export default function IncutiChatPage() {
     }
   };
 
+  const suggestedQuestions = language === 'en'
+    ? SUGGESTED_QUESTIONS_ENGLISH
+    : SUGGESTED_QUESTIONS_KINYARWANDA;
+
   return (
     <div className="flex flex-col h-[calc(100dvh-150px)] md:h-[calc(100vh-110px)] max-w-4xl mx-auto animate-fade-in border border-gray-200 rounded-2xl bg-white shadow-sm overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-forest-100 bg-white p-3.5 sm:p-4 shrink-0">
         <div className="flex items-center gap-2.5">
           <div className="relative">
-            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-forest-700 text-white flex items-center justify-center shadow-xs">
+            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-[#145726] text-white flex items-center justify-center shadow-xs">
               <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-[#f5c518]" />
             </div>
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-white" />
           </div>
           <div>
             <h1 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-1.5 leading-tight">
-              <span>Incuti Bot</span>
-              <span className="text-[9px] font-bold uppercase bg-forest-100 text-forest-800 px-2 py-0.5 rounded-full">
-                Kinyarwanda AI
+              <span>{t.chat.title}</span>
+              <span className="text-[9px] font-bold uppercase bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <Globe className="h-3 w-3 text-amber-700" />
+                <span>RW & EN</span>
               </span>
             </h1>
-            <p className="text-[11px] text-gray-500">Ibisubizo ngiro ku buhinzi</p>
+            <p className="text-[11px] text-gray-500">{t.chat.subtitle}</p>
           </div>
         </div>
 
@@ -146,7 +164,7 @@ export default function IncutiChatPage() {
           className="inline-flex items-center gap-1 text-xs font-semibold text-forest-700 bg-forest-50 px-2.5 py-1.5 rounded-lg border border-forest-200 hover:bg-forest-100 transition"
         >
           <BookOpen className="h-3.5 w-3.5 text-[#145726]" />
-          <span className="hidden sm:inline">Amasomo</span>
+          <span className="hidden sm:inline">{t.chat.learnBtn}</span>
         </Link>
       </div>
 
@@ -160,7 +178,7 @@ export default function IncutiChatPage() {
             }`}
           >
             {msg.sender === 'incuti' && (
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-forest-700 text-white flex items-center justify-center shrink-0 mb-1">
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-[#145726] text-white flex items-center justify-center shrink-0 mb-1">
                 <Sprout className="h-3.5 w-3.5 text-[#f5c518]" />
               </div>
             )}
@@ -192,12 +210,12 @@ export default function IncutiChatPage() {
 
         {loading && (
           <div className="flex items-end gap-2">
-            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-forest-700 text-white flex items-center justify-center shrink-0">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-[#145726] text-white flex items-center justify-center shrink-0">
               <Sprout className="h-3.5 w-3.5 text-[#f5c518]" />
             </div>
             <div className="bg-white rounded-2xl rounded-bl-none p-3 border border-gray-200 shadow-xs flex items-center gap-2 text-xs text-gray-600">
               <Loader2 className="h-4 w-4 animate-spin text-[#145726]" />
-              <span>Incuti Bot irimo gutegura igisubizo...</span>
+              <span>{t.chat.typing}</span>
             </div>
           </div>
         )}
@@ -210,9 +228,9 @@ export default function IncutiChatPage() {
         <div className="flex items-center gap-1.5">
           <span className="text-[10px] font-bold text-gray-400 whitespace-nowrap flex items-center gap-1 shrink-0">
             <Sparkles className="h-3 w-3 text-forest-600" />
-            Inama:
+            {t.chat.suggestedHeader}
           </span>
-          {SUGGESTED_QUESTIONS.map((q, idx) => (
+          {suggestedQuestions.map((q, idx) => (
             <button
               key={idx}
               disabled={loading}
@@ -234,7 +252,7 @@ export default function IncutiChatPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={loading}
-            placeholder="Baza ikibazo mu Kinyarwanda..."
+            placeholder={t.chat.inputPlaceholder}
             className="flex-1 rounded-xl border border-gray-200 bg-gray-50/70 px-3.5 py-2.5 text-sm text-gray-900 focus:border-forest-600 focus:outline-none focus:ring-1 focus:ring-forest-600"
           />
 
@@ -242,7 +260,7 @@ export default function IncutiChatPage() {
             onClick={() => handleSendMessage()}
             disabled={loading || !input.trim()}
             className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-[#145726] text-white flex items-center justify-center hover:bg-[#0f421d] transition active:scale-95 disabled:opacity-50 shrink-0 shadow-xs"
-            title="Ohereza"
+            title={t.chat.send}
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" /> : <Send className="h-4 w-4 text-[#f5c518]" />}
           </button>
@@ -251,4 +269,3 @@ export default function IncutiChatPage() {
     </div>
   );
 }
-

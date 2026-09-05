@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/components/AuthContext';
+import { useLanguage } from '@/components/LanguageContext';
 import {
   Camera,
   Sprout,
@@ -21,6 +22,7 @@ import {
 
 export default function HomePage() {
   const { user, setShowAuthModal } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <div className="animate-fade-in -mt-3 -mx-3 sm:-mx-6 lg:-mx-8">
@@ -37,17 +39,19 @@ export default function HomePage() {
           {/* Pill badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-xs text-emerald-100 font-medium">
             <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-            <span>AI-Powered Conservation Agriculture · Rwanda</span>
+            <span>{t.hero.badge}</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight tracking-tight">
-            {user
-              ? <><span className="text-amber-300">Muraho</span>, {user.name}!</>
-              : <>Grow Smarter.<br /><span className="text-amber-300">Farm Better.</span></>}
+          <h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight tracking-tight whitespace-pre-line">
+            {user ? (
+              <><span className="text-amber-300">{t.hero.welcome}</span>, {user.name}!</>
+            ) : (
+              <>Grow Smarter.<br /><span className="text-amber-300">Farm Better.</span></>
+            )}
           </h1>
 
           <p className="text-base sm:text-xl text-emerald-100/80 max-w-xl mx-auto leading-relaxed">
-            Incuti empowers Rwandan farmers with AI-powered field scanning, personalised advice in Kinyarwanda, and sustainable farming knowledge — all in one place.
+            {t.hero.subtitle}
           </p>
 
           {/* CTA buttons */}
@@ -57,7 +61,7 @@ export default function HomePage() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-amber-400 px-8 py-3.5 text-sm font-bold text-emerald-950 shadow-lg hover:bg-amber-300 transition active:scale-95"
             >
               <Camera className="h-4 w-4" />
-              Scan Your Field
+              <span>{t.hero.scanButton}</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
 
@@ -66,7 +70,7 @@ export default function HomePage() {
                 onClick={() => setShowAuthModal(true)}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/20 transition active:scale-95"
               >
-                Create Free Account
+                {t.hero.createAccount}
               </button>
             ) : (
               <Link
@@ -74,7 +78,7 @@ export default function HomePage() {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/20 transition"
               >
                 <Sprout className="h-4 w-4 text-amber-300" />
-                My Farm
+                <span>{t.hero.myFarm}</span>
               </Link>
             )}
           </div>
@@ -82,9 +86,9 @@ export default function HomePage() {
           {/* Trust badges */}
           <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
             {[
-              { label: 'AI-powered', icon: <Sparkles className="h-3.5 w-3.5 text-amber-300" /> },
-              { label: 'Kinyarwanda supported', icon: <Globe className="h-3.5 w-3.5 text-amber-300" /> },
-              { label: 'Free for farmers', icon: <ShieldCheck className="h-3.5 w-3.5 text-amber-300" /> },
+              { label: t.hero.trustAi, icon: <Sparkles className="h-3.5 w-3.5 text-amber-300" /> },
+              { label: t.hero.trustLang, icon: <Globe className="h-3.5 w-3.5 text-amber-300" /> },
+              { label: t.hero.trustFree, icon: <ShieldCheck className="h-3.5 w-3.5 text-amber-300" /> },
             ].map((s) => (
               <div key={s.label} className="flex items-center gap-1.5 text-xs text-emerald-100/70 font-medium">
                 {s.icon}
@@ -96,7 +100,7 @@ export default function HomePage() {
 
         {/* Scroll hint */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <span className="text-[10px] text-white/30 tracking-widest uppercase font-medium">Scroll</span>
+          <span className="text-[10px] text-white/30 tracking-widest uppercase font-medium">{t.hero.scroll}</span>
           <div className="w-px h-6 bg-white/20 rounded-full" />
         </div>
       </section>
@@ -108,33 +112,31 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center space-y-5">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-xs font-semibold text-emerald-700 uppercase tracking-wider">
             <Leaf className="h-3.5 w-3.5" />
-            About Incuti
+            {t.about.badge}
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-            Built for Rwanda&apos;s Farmers
+            {t.about.title}
           </h2>
           <p className="text-base text-slate-500 leading-relaxed max-w-2xl mx-auto">
-            Incuti — meaning <em>&quot;friend&quot;</em> in Kinyarwanda — is an AI platform supporting
-            smallholder farmers across Rwanda. We combine Google&apos;s Gemini AI with local agricultural
-            knowledge to help you protect soil, identify crop diseases, and grow sustainably.
+            {t.about.desc}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 text-left">
             {[
               {
                 icon: <Camera className="h-5 w-5 text-[#145726]" />,
-                title: 'AI Field Scanning',
-                desc: 'Point your phone at any crop or soil — get an instant diagnosis powered by Gemini.',
+                title: t.about.card1Title,
+                desc: t.about.card1Desc,
               },
               {
                 icon: <MessageSquare className="h-5 w-5 text-[#145726]" />,
-                title: 'Chat in Kinyarwanda',
-                desc: 'Ask any farming question and receive expert answers in your language.',
+                title: t.about.card2Title,
+                desc: t.about.card2Desc,
               },
               {
                 icon: <BookOpen className="h-5 w-5 text-[#145726]" />,
-                title: 'Learn & Grow',
-                desc: 'Access curated lessons on conservation farming, composting, and soil health.',
+                title: t.about.card3Title,
+                desc: t.about.card3Desc,
               },
             ].map((f) => (
               <div key={f.title} className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
@@ -170,21 +172,19 @@ export default function HomePage() {
             <div className="relative bg-[#145726] w-full sm:w-1/2 p-8 sm:p-14 flex flex-col justify-center text-white">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-amber-200 uppercase tracking-wider mb-5 self-start">
                 <Camera className="h-3.5 w-3.5" />
-                AI Vision · Gemini
+                {t.homeScanSection.badge}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
-                Scan Your Field.<br />Get Instant Answers.
+              <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-4 whitespace-pre-line">
+                {t.homeScanSection.title}
               </h2>
               <p className="text-sm text-emerald-100/80 leading-relaxed mb-7">
-                Take a photo of any crop, leaf, or soil sample. Gemini AI analyses it in seconds —
-                detecting disease, nutrient deficiency, pest damage, and moisture issues — then
-                delivers a clear action plan.
+                {t.homeScanSection.desc}
               </p>
               <Link
                 href="/scan"
                 className="self-start inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-emerald-950 hover:bg-amber-300 transition active:scale-95"
               >
-                Scan Now
+                <span>{t.homeScanSection.button}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -213,21 +213,19 @@ export default function HomePage() {
             <div className="relative w-full sm:w-1/2 p-8 sm:p-14 flex flex-col justify-center bg-gradient-to-br from-slate-900 to-slate-800 text-white">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-xs font-semibold text-amber-300 uppercase tracking-wider mb-5 self-start">
                 <MessageSquare className="h-3.5 w-3.5" />
-                AI Chat · Kinyarwanda
+                {t.homeBotSection.badge}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
-                Ask Incuti Bot.<br /><span className="text-amber-300">Anytime. Anything.</span>
+              <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-4 whitespace-pre-line">
+                {t.homeBotSection.title}
               </h2>
               <p className="text-sm text-slate-300 leading-relaxed mb-7">
-                Got a question about composting, irrigation, or fighting pests? Incuti Bot
-                understands Kinyarwanda and gives you expert answers powered by Gemini AI —
-                like having an agronomist in your pocket.
+                {t.homeBotSection.desc}
               </p>
               <Link
                 href="/chat"
                 className="self-start inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-slate-900 hover:bg-amber-300 transition active:scale-95"
               >
-                Start Chatting
+                <span>{t.homeBotSection.button}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -256,25 +254,19 @@ export default function HomePage() {
             <div className="relative bg-gradient-to-br from-emerald-800 to-[#0b3a1a] w-full sm:w-1/2 p-8 sm:p-14 flex flex-col justify-center text-white">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-5 self-start">
                 <BookOpen className="h-3.5 w-3.5" />
-                Knowledge · Amasomo
+                {t.homeLearnSection.badge}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
-                Learn Conservation<br />Farming Practices.
+              <h2 className="text-2xl sm:text-3xl font-bold leading-tight mb-4 whitespace-pre-line">
+                {t.homeLearnSection.title}
               </h2>
               <p className="text-sm text-emerald-100/80 leading-relaxed mb-5">
-                Explore curated lessons on soil health, composting, crop rotation, organic inputs,
-                and pest management — built for Rwandan smallholder conditions.
+                {t.homeLearnSection.desc}
               </p>
               <ul className="space-y-2 mb-7">
-                {[
-                  'Soil conservation & terracing',
-                  'Natural composting techniques',
-                  'Intercropping strategies',
-                  'Organic pest control',
-                ].map((t) => (
-                  <li key={t} className="flex items-center gap-2 text-sm text-emerald-100">
+                {t.homeLearnSection.bullets.map((b) => (
+                  <li key={b} className="flex items-center gap-2 text-sm text-emerald-100">
                     <ChevronRight className="h-3.5 w-3.5 text-amber-300 shrink-0" />
-                    {t}
+                    <span>{b}</span>
                   </li>
                 ))}
               </ul>
@@ -282,7 +274,7 @@ export default function HomePage() {
                 href="/learn"
                 className="self-start inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-emerald-950 hover:bg-amber-300 transition active:scale-95"
               >
-                Start Learning
+                <span>{t.homeLearnSection.button}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -310,25 +302,19 @@ export default function HomePage() {
             <div className="relative w-full sm:w-1/2 p-8 sm:p-14 flex flex-col justify-center bg-white">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-5 self-start">
                 <Sprout className="h-3.5 w-3.5" />
-                My Farm · Umurima Wanjye
+                {t.homeFarmSection.badge}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-4">
-                Your Farm Profile.<br />Track Everything.
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight mb-4 whitespace-pre-line">
+                {t.homeFarmSection.title}
               </h2>
               <p className="text-sm text-slate-500 leading-relaxed mb-5">
-                Register your farm, log your location, crop types, and area. Track all your field
-                actions and get AI recommendations tailored to your specific farm conditions.
+                {t.homeFarmSection.desc}
               </p>
               <ul className="space-y-2 mb-7">
-                {[
-                  'Register farm location & size',
-                  'Log crops & intercropping',
-                  'Track field actions & history',
-                  'Get personalised AI advice',
-                ].map((t) => (
-                  <li key={t} className="flex items-center gap-2 text-sm text-slate-600">
+                {t.homeFarmSection.bullets.map((b) => (
+                  <li key={b} className="flex items-center gap-2 text-sm text-slate-600">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#145726] shrink-0" />
-                    {t}
+                    <span>{b}</span>
                   </li>
                 ))}
               </ul>
@@ -337,7 +323,7 @@ export default function HomePage() {
                 className="self-start inline-flex items-center gap-2 rounded-full bg-[#145726] px-6 py-3 text-sm font-bold text-white hover:bg-[#0f421d] transition active:scale-95"
               >
                 <Sprout className="h-4 w-4 text-amber-300" />
-                My Farm
+                <span>{t.homeFarmSection.button}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -360,15 +346,13 @@ export default function HomePage() {
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-amber-200 uppercase tracking-wider">
                   <Mail className="h-3.5 w-3.5" />
-                  Contact Us
+                  {t.contact.badge}
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-bold leading-tight">
-                  We&apos;d love to<br />
-                  <span className="text-amber-300">hear from you.</span>
+                <h2 className="text-2xl sm:text-3xl font-bold leading-tight whitespace-pre-line">
+                  {t.contact.title}
                 </h2>
                 <p className="text-sm text-emerald-100/80 leading-relaxed">
-                  Whether you&apos;re a farmer, researcher, NGO partner, or agri-investor — reach out.
-                  Incuti is growing and we welcome collaborations across Rwanda.
+                  {t.contact.desc}
                 </p>
               </div>
 
@@ -382,7 +366,7 @@ export default function HomePage() {
                     <Mail className="h-5 w-5 text-amber-300" />
                   </div>
                   <div>
-                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider font-medium mb-0.5">Email</div>
+                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider font-medium mb-0.5">{t.contact.email}</div>
                     <div className="text-sm font-semibold text-white group-hover:text-amber-300 transition">info@incuti.rw</div>
                   </div>
                 </a>
@@ -395,7 +379,7 @@ export default function HomePage() {
                     <Phone className="h-5 w-5 text-amber-300" />
                   </div>
                   <div>
-                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider font-medium mb-0.5">Phone</div>
+                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider font-medium mb-0.5">{t.contact.phone}</div>
                     <div className="text-sm font-semibold text-white group-hover:text-amber-300 transition">+250 700 000 000</div>
                   </div>
                 </a>
@@ -405,7 +389,7 @@ export default function HomePage() {
                     <Globe className="h-5 w-5 text-amber-300" />
                   </div>
                   <div>
-                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider font-medium mb-0.5">Location</div>
+                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider font-medium mb-0.5">{t.contact.location}</div>
                     <div className="text-sm font-semibold text-white">Kigali, Rwanda 🇷🇼</div>
                   </div>
                 </div>

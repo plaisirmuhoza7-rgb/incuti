@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
+import { useLanguage } from './LanguageContext';
 import { Sprout, Phone, User as UserIcon, X, Sparkles, Loader2 } from 'lucide-react';
 
 export default function AuthModal() {
   const { showAuthModal, setShowAuthModal, login } = useAuth();
+  const { t } = useLanguage();
+
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,7 +19,7 @@ export default function AuthModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
-      setError('Nyabuneka shyiramo amazina yawe na numero ya telefone.');
+      setError(t.auth.fillError);
       return;
     }
 
@@ -27,7 +30,7 @@ export default function AuthModal() {
     setLoading(false);
 
     if (!res.success) {
-      setError(res.error || 'Ntibyashobotse kwinjira. Gerageza nanone.');
+      setError(res.error || 'Ntibyashobotse kwinjira / Sign in failed.');
     }
   };
 
@@ -59,14 +62,13 @@ export default function AuthModal() {
             <Sprout className="h-6 w-6 text-[#f5c518]" />
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-gray-900 leading-tight">Injira muri Incuti</h2>
-            <p className="text-xs text-[#145726] font-bold">Ubuhinzi Bubungabunga Ubutaka</p>
+            <h2 className="text-lg sm:text-xl font-black text-gray-900 leading-tight">{t.auth.title}</h2>
+            <p className="text-xs text-[#145726] font-bold">{t.auth.subtitle}</p>
           </div>
         </div>
 
         <p className="mb-4 text-xs sm:text-sm text-gray-600 leading-relaxed">
-          Shyiramo amazina yawe na numero ya telefone kugira ngo utangire gusesengura umurima,
-          kubika ibikorwa no kubaza <strong>Incuti Bot</strong>.
+          {t.auth.desc}
         </p>
 
         {error && (
@@ -78,7 +80,7 @@ export default function AuthModal() {
         <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
             <label className="block text-xs font-bold text-gray-700 mb-1">
-              Amazina yawe
+              {t.auth.nameLabel}
             </label>
             <div className="relative rounded-lg shadow-2xs">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -88,7 +90,7 @@ export default function AuthModal() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="urugero: Kwizera Jean"
+                placeholder={t.auth.namePlaceholder}
                 className="block w-full rounded-xl border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726] bg-gray-50/50"
                 required
               />
@@ -97,7 +99,7 @@ export default function AuthModal() {
 
           <div>
             <label className="block text-xs font-bold text-gray-700 mb-1">
-              Nimero ya Telefone
+              {t.auth.phoneLabel}
             </label>
             <div className="relative rounded-lg shadow-2xs">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -107,7 +109,7 @@ export default function AuthModal() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="urugero: 0788 123 456"
+                placeholder={t.auth.phonePlaceholder}
                 className="block w-full rounded-xl border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726] bg-gray-50/50"
                 required
               />
@@ -117,15 +119,15 @@ export default function AuthModal() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] py-3 text-sm font-black text-white shadow hover:bg-[#0f421d] transition active:scale-[0.98] disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] py-3 text-sm font-black text-white shadow hover:bg-[#0f421d] transition active:scale-95 disabled:opacity-50"
           >
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" />
-                <span>Birimo kwinjira...</span>
+                <span>{t.auth.submitting}</span>
               </>
             ) : (
-              <span>Komeza</span>
+              <span>{t.auth.submit}</span>
             )}
           </button>
         </form>
@@ -138,11 +140,10 @@ export default function AuthModal() {
             className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#145726]/30 bg-[#f2f8f2] py-2.5 text-xs font-black text-[#145726] hover:bg-green-100 transition active:scale-[0.98]"
           >
             <Sparkles className="h-4 w-4 text-[#145726]" />
-            <span>Konti y&apos;Icyitegererezo (Demo Farmer)</span>
+            <span>{t.auth.demoFarmer}</span>
           </button>
         </div>
       </div>
     </div>
   );
 }
-

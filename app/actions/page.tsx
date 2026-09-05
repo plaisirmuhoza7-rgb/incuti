@@ -2,17 +2,16 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/components/AuthContext';
+import { useLanguage } from '@/components/LanguageContext';
 import {
   CheckSquare,
   PlusCircle,
   Camera,
-  Image as ImageIcon,
   CheckCircle2,
   Clock,
   Sparkles,
   Loader2,
   X,
-  Filter,
   Calendar
 } from 'lucide-react';
 import { ActionRecord } from '@/lib/types';
@@ -20,43 +19,44 @@ import { ActionRecord } from '@/lib/types';
 const COMMON_CONSERVATION_ACTIONS = [
   {
     type: 'Gusasira (Mulching)',
-    desc: 'Gupfuka ubutaka ukoresheje ibyatsi byumye cyangwa ibisigazwa by\'imyaka.',
-    badge: 'Ubuhehere'
+    desc: 'Gupfuka ubutaka ukoresheje ibyatsi byumye cyangwa ibisigazwa by\'imyaka / Apply mulch.',
+    badge: 'Moisture / Ubuhehere'
   },
   {
-    type: 'Ifumbire y\'Imborera (Organic Manure)',
-    desc: 'Gushyira mu murima ifumbire iboze neza ikoze mu bishingwe n\'amase y\'amatungo.',
-    badge: 'Uburumbuke'
+    type: 'Ifumbire y\'Imborera (Organic Compost)',
+    desc: 'Gushyira mu murima ifumbire iboze neza / Apply organic compost manure.',
+    badge: 'Soil Health / Uburumbuke'
   },
   {
-    type: 'Gupfuka Ubutaka (Soil Cover Crops)',
-    desc: 'Gutera ibihingwa bipfuka ubutaka nka mucuna cyangwa ibishyimbo by\'urubingo.',
-    badge: 'Kwirinda Izuba'
+    type: 'Gupfuka Ubutaka (Cover Crops)',
+    desc: 'Gutera ibihingwa bipfuka ubutaka / Plant cover crops to prevent sun damage.',
+    badge: 'Sun Protection'
   },
   {
-    type: 'Kurwanya Isuri (Erosion Control / Terracing)',
-    desc: 'Gucukura imiringoti ifata amazi no gutera ibyatsi by\'urubingo ku mirongo.',
-    badge: 'Isuri'
+    type: 'Kurwanya Isuri (Terracing & Trenches)',
+    desc: 'Gucukura imiringoti ifata amazi / Dig infiltration trenches along slope contours.',
+    badge: 'Erosion Control'
   },
   {
     type: 'Kudahingagura Cyane (Minimum Tillage)',
-    desc: 'Guharura ahazaterwa imbuto gusa utangije ubutaka bwose.',
-    badge: 'Ubuzima bw\'Ubutaka'
+    desc: 'Guharura ahazaterwa imbuto gusa / Disturb soil as little as possible.',
+    badge: 'Minimum Tillage'
   },
   {
     type: 'Guhuza / Guhinduranya Ibihingwa (Intercropping)',
-    desc: 'Guhinza ibigori bivanze n\'ibinyamisogwe kugira ngo byongere azote mu butaka.',
-    badge: 'Azote'
+    desc: 'Guhinza ibigori bivanze n\'ibinyamisogwe / Intercrop maize with nitrogen fixing beans.',
+    badge: 'Nitrogen Fixation'
   },
   {
-    type: 'Ibindi bikorwa (Other)',
-    desc: 'Ikindi gikorwa cyose cyo kubungabunga umurima.',
-    badge: 'Ibindi'
+    type: 'Ibindi bikorwa (Other Action)',
+    desc: 'Ikindi gikorwa cyose cyo kubungabunga umurima / Other field conservation action.',
+    badge: 'General'
   }
 ];
 
 export default function ActionTrackerPage() {
   const { user, farm, setShowAuthModal } = useAuth();
+  const { t } = useLanguage();
 
   const [actions, setActions] = useState<ActionRecord[]>([]);
   const [loading, setLoading] = useState(false);
@@ -143,7 +143,7 @@ export default function ActionTrackerPage() {
       setActionType('Gusasira (Mulching)');
       setStatus('Byarangiye');
     } catch (err: any) {
-      alert(err.message || 'Habaye ikibazo.');
+      alert(err.message || 'Error occurred.');
     } finally {
       setSubmitting(false);
     }
@@ -163,9 +163,9 @@ export default function ActionTrackerPage() {
             <CheckSquare className="h-4 w-4" />
             <span>Conservation Action Tracker</span>
           </div>
-          <h1 className="text-2xl font-black text-gray-900">Ibikorwa Byo Kubungabunga Ubutaka</h1>
+          <h1 className="text-2xl font-black text-gray-900">{t.actions.title}</h1>
           <p className="text-xs sm:text-sm text-gray-600">
-            Kurikirana ibikorwa umaze gukora ku butaka bwawe: gusasira, ifumbire y&apos;imborera, gupfuka ubutaka n&apos;imiringoti.
+            {t.actions.subtitle}
           </p>
         </div>
 
@@ -177,10 +177,10 @@ export default function ActionTrackerPage() {
               setShowAddModal(true);
             }
           }}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-forest-700 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow hover:bg-forest-800 transition active:scale-95"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] px-5 py-3 text-xs sm:text-sm font-bold text-white shadow hover:bg-[#0f421d] transition active:scale-95"
         >
-          <PlusCircle className="h-4 w-4" />
-          <span>Andika Igikorwa Gishya</span>
+          <PlusCircle className="h-4 w-4 text-[#f5c518]" />
+          <span>{t.actions.newActionBtn}</span>
         </button>
       </div>
 
@@ -188,7 +188,7 @@ export default function ActionTrackerPage() {
       <div className="rounded-3xl bg-white border border-forest-100 p-5 shadow-sm">
         <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-forest-600" />
-          <span>Ibikorwa By&apos;Ingenzi Byo Kwitaho (Action Checklist)</span>
+          <span>{t.actions.checklistTitle}</span>
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -214,7 +214,7 @@ export default function ActionTrackerPage() {
                 }}
                 className="mt-3 text-[11px] font-bold text-forest-700 hover:text-forest-900 text-left flex items-center gap-1"
               >
-                <span>+ Andika iki gikorwa</span>
+                <span>{t.actions.addThisAction}</span>
               </button>
             </div>
           ))}
@@ -227,9 +227,9 @@ export default function ActionTrackerPage() {
           <div>
             <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
               <Clock className="h-4 w-4 text-forest-700" />
-              <span>Amateka y&apos;Ibikorwa Byakozwe ({actions.length})</span>
+              <span>{t.actions.historyTitle} ({actions.length})</span>
             </h2>
-            <p className="text-xs text-gray-500">Urutonde rw&apos;ibyo wakoze mu kurengera ubutaka</p>
+            <p className="text-xs text-gray-500">{t.actions.historySubtitle}</p>
           </div>
 
           {/* Filter badges */}
@@ -240,11 +240,11 @@ export default function ActionTrackerPage() {
                 onClick={() => setFilterType(f)}
                 className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition ${
                   filterType === f
-                    ? 'bg-forest-700 text-white font-bold'
+                    ? 'bg-[#145726] text-white font-bold'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                {f === 'All' ? 'Byose' : f}
+                {f === 'All' ? t.actions.filterAll : f}
               </button>
             ))}
           </div>
@@ -253,13 +253,13 @@ export default function ActionTrackerPage() {
         {loading ? (
           <div className="py-12 text-center text-gray-500 text-xs flex items-center justify-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin text-forest-700" />
-            <span>Birimo gushakishwa...</span>
+            <span>Loading...</span>
           </div>
         ) : filteredActions.length === 0 ? (
           <div className="py-12 text-center text-gray-500 text-xs">
             <CheckSquare className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-            <p className="font-semibold text-gray-700">Nta gikorwa kirandikwa muri iki cyiciro.</p>
-            <p className="text-gray-400 mt-1">Kanda kuri &quot;Andika Igikorwa Gishya&quot; hejuru kugira ngo ubike icyo wakoze.</p>
+            <p className="font-semibold text-gray-700">{t.actions.noActions}</p>
+            <p className="text-gray-400 mt-1">{t.actions.clickToAdd}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -287,12 +287,12 @@ export default function ActionTrackerPage() {
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-xs sm:text-sm font-bold text-gray-900">{action.action_type}</h3>
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800">
-                        {action.status || 'Byarangiye'}
+                        {action.status || 'Completed'}
                       </span>
                     </div>
 
                     <p className="text-xs text-gray-600 mb-1 leading-relaxed">
-                      {action.description || 'Igikorwa cyo kubungabunga ubutaka.'}
+                      {action.description || 'Conservation practice recorded.'}
                     </p>
 
                     <div className="flex items-center gap-2 text-[11px] text-gray-400">
@@ -323,15 +323,15 @@ export default function ActionTrackerPage() {
                 <CheckSquare className="h-5 w-5 text-[#f5c518]" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-black text-gray-900 leading-tight">Andika Igikorwa Cyakozwe</h3>
-                <p className="text-[11px] text-gray-500">Kubika amakuru muri Google Sheets</p>
+                <h3 className="text-base sm:text-lg font-black text-gray-900 leading-tight">{t.actions.modalTitle}</h3>
+                <p className="text-[11px] text-gray-500">{t.actions.modalSubtitle}</p>
               </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-3.5">
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">
-                  Ubwoko bw&apos;Igikorwa (Action Type) *
+                  {t.actions.actionTypeLabel}
                 </label>
                 <select
                   value={actionType}
@@ -349,35 +349,35 @@ export default function ActionTrackerPage() {
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">
-                  Ubusobanuro cyangwa Inyandiko (Description)
+                  {t.actions.descriptionLabel}
                 </label>
                 <textarea
                   rows={3}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="urugero: Nasasiye umurima wose w'ibigori nkoresheje ibyatsi byumye..."
+                  placeholder="e.g. Mulched maize plot with crop residue to keep moisture..."
                   className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">
-                  Imiterere y&apos;Igikorwa (Status)
+                  {t.actions.statusLabel}
                 </label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
                   className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none"
                 >
-                  <option value="Byarangiye">Byarangiye (Completed)</option>
-                  <option value="Birakomeza">Birakomeza (In Progress)</option>
+                  <option value="Byarangiye">{t.actions.completed}</option>
+                  <option value="Birakomeza">{t.actions.inProgress}</option>
                 </select>
               </div>
 
               {/* Photo Upload */}
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1">
-                  Ifoto y&apos;Igikorwa (Optional Photo Proof)
+                  {t.actions.photoLabel}
                 </label>
 
                 <input
@@ -406,7 +406,7 @@ export default function ActionTrackerPage() {
                     className="w-full rounded-xl border border-dashed border-gray-300 p-3.5 text-center text-xs font-semibold text-gray-600 hover:border-[#145726] hover:bg-[#f2f8f2] transition flex items-center justify-center gap-2"
                   >
                     <Camera className="h-4 w-4 text-[#145726]" />
-                    <span>Fata ifoto cyangwa kanda hano uhitemo</span>
+                    <span>{t.actions.takePhotoBtn}</span>
                   </button>
                 )}
               </div>
@@ -417,7 +417,7 @@ export default function ActionTrackerPage() {
                   onClick={() => setShowAddModal(false)}
                   className="rounded-xl border border-gray-300 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50"
                 >
-                  Kureka
+                  {t.actions.cancel}
                 </button>
                 <button
                   type="submit"
@@ -427,10 +427,10 @@ export default function ActionTrackerPage() {
                   {submitting ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" />
-                      <span>Birimo kubikwa...</span>
+                      <span>{t.actions.savingAction}</span>
                     </>
                   ) : (
-                    <span>Bika Igikorwa</span>
+                    <span>{t.actions.saveAction}</span>
                   )}
                 </button>
               </div>
@@ -441,4 +441,3 @@ export default function ActionTrackerPage() {
     </div>
   );
 }
-

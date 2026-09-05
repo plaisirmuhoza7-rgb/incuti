@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/components/AuthContext';
+import { useLanguage } from '@/components/LanguageContext';
 import {
   Sprout,
   MapPin,
@@ -37,6 +38,7 @@ const COMMON_CROPS = [
 
 export default function MyFarmPage() {
   const { user, farm, updateCurrentFarm, setShowAuthModal } = useAuth();
+  const { t } = useLanguage();
 
   const [district, setDistrict] = useState(farm?.district || 'Musanze');
   const [locationText, setLocationText] = useState(farm?.location_text || '');
@@ -67,7 +69,7 @@ export default function MyFarmPage() {
 
     if (!district || !locationText.trim()) {
       setMessage({
-        text: 'Akarere n\'aho umurima uherereye birakenewe.',
+        text: t.farm.requiredError,
         type: 'error',
       });
       return;
@@ -92,18 +94,18 @@ export default function MyFarmPage() {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Habaye ikibazo mu kubika umurima.');
+        throw new Error(data.error || 'Error saving farm profile.');
       }
 
       updateCurrentFarm(data.farm);
       setIsEditing(false);
       setMessage({
-        text: 'Amakuru y\'umurima yabitswe neza!',
+        text: t.farm.savedSuccess,
         type: 'success',
       });
     } catch (err: any) {
       setMessage({
-        text: err.message || 'Habaye ikibazo mu kubika umurima.',
+        text: err.message || t.farm.requiredError,
         type: 'error',
       });
     } finally {
@@ -119,9 +121,9 @@ export default function MyFarmPage() {
           <Sprout className="h-4 w-4" />
           <span>Farm Profile</span>
         </div>
-        <h1 className="text-2xl font-black text-gray-900">Umurima Wanjye (My Farm)</h1>
+        <h1 className="text-2xl font-black text-gray-900">{t.farm.title}</h1>
         <p className="text-xs sm:text-sm text-gray-600">
-          Uzuza kandi ucunge amakuru y&apos;ubuso bw&apos;umurima wawe, aho uherereye n&apos;ibihingwa ukunze guhinga.
+          {t.farm.subtitle}
         </p>
       </div>
 
@@ -140,7 +142,7 @@ export default function MyFarmPage() {
         </div>
       )}
 
-      {/* Farm Profile Display Card (when saved and not currently editing) */}
+      {/* Farm Profile Display Card */}
       {farm && !isEditing && (
         <div className="rounded-2xl bg-white border border-gray-200 p-5 sm:p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between gap-3">
@@ -150,10 +152,10 @@ export default function MyFarmPage() {
               </div>
               <div>
                 <h2 className="text-base sm:text-lg font-black text-gray-900 leading-tight">
-                  Umurima wo muri {farm.district}
+                  {t.farm.farmIn} {farm.district}
                 </h2>
                 <p className="text-[11px] text-gray-500">
-                  Wanditswe ku: {new Date(farm.created_at).toLocaleDateString()}
+                  {t.farm.registeredOn} {new Date(farm.created_at).toLocaleDateString()}
                 </p>
               </div>
             </div>
@@ -163,13 +165,13 @@ export default function MyFarmPage() {
               className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 transition active:scale-95 shrink-0"
             >
               <Edit3 className="h-3.5 w-3.5" />
-              <span>Hindura</span>
+              <span>{t.farm.edit}</span>
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-gray-100 text-xs sm:text-sm">
             <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
-              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Aho uherereye:</span>
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">{t.farm.locationLabel}</span>
               <p className="font-extrabold text-gray-900 flex items-center gap-1.5 mt-1">
                 <MapPin className="h-4 w-4 text-[#145726] shrink-0" />
                 <span>{farm.district} — {farm.location_text}</span>
@@ -177,7 +179,7 @@ export default function MyFarmPage() {
             </div>
 
             <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
-              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Ubuso bw&apos;Umurima:</span>
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">{t.farm.areaLabel}</span>
               <p className="font-extrabold text-gray-900 flex items-center gap-1.5 mt-1">
                 <Maximize2 className="h-4 w-4 text-[#145726] shrink-0" />
                 <span>{farm.area_ha} Hectares (Ha)</span>
@@ -185,7 +187,7 @@ export default function MyFarmPage() {
             </div>
 
             <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
-              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Ibihingwa by&apos;ibanze:</span>
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">{t.farm.cropsLabel}</span>
               <p className="font-extrabold text-gray-900 flex items-center gap-1.5 mt-1">
                 <Layers className="h-4 w-4 text-[#145726] shrink-0" />
                 <span>{farm.crops}</span>
@@ -193,7 +195,7 @@ export default function MyFarmPage() {
             </div>
 
             <div className="p-3.5 rounded-xl bg-[#f2f8f2] border border-[#d0e8d2]">
-              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">Guhuza Ibihingwa (Intercrop):</span>
+              <span className="text-[11px] font-bold text-[#145726] uppercase tracking-wider block">{t.farm.intercropLabel}</span>
               <p className="font-extrabold text-[#145726] flex items-center gap-1.5 mt-1">
                 <CheckCircle2 className="h-4 w-4 text-[#145726] shrink-0" />
                 <span>{farm.intercrop}</span>
@@ -207,14 +209,14 @@ export default function MyFarmPage() {
       {(isEditing || !farm) && (
         <form onSubmit={handleSubmit} className="rounded-2xl bg-white border border-gray-200 p-5 md:p-8 shadow-sm space-y-4">
           <h2 className="text-base sm:text-lg font-black text-gray-900">
-            {farm ? 'Hindura Amakuru y\'Umurima' : 'Injiza Amakuru Mashya y\'Umurima'}
+            {farm ? t.farm.editTitle : t.farm.newTitle}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* District */}
             <div>
               <label className="block text-xs font-bold text-gray-700 mb-1">
-                Akarere (District) *
+                {t.farm.district}
               </label>
               <select
                 value={district}
@@ -233,13 +235,13 @@ export default function MyFarmPage() {
             {/* Location text */}
             <div>
               <label className="block text-xs font-bold text-gray-700 mb-1">
-                Umurenge / Akagari / Icyaro *
+                {t.farm.sector}
               </label>
               <input
                 type="text"
                 value={locationText}
                 onChange={(e) => setLocationText(e.target.value)}
-                placeholder="urugero: Umurenge wa Kinigi, Akagari ka Nyange"
+                placeholder="e.g. Kinigi Sector, Nyange Cell"
                 className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
                 required
               />
@@ -248,7 +250,7 @@ export default function MyFarmPage() {
             {/* Area */}
             <div>
               <label className="block text-xs font-bold text-gray-700 mb-1">
-                Ubuso bw&apos;Umurima muri Hectares (Ha) *
+                {t.farm.areaHa}
               </label>
               <input
                 type="number"
@@ -265,17 +267,17 @@ export default function MyFarmPage() {
             {/* Intercrop */}
             <div>
               <label className="block text-xs font-bold text-gray-700 mb-1">
-                Ese uhuza ibihingwa mu murima umwe?
+                {t.farm.intercropSelect}
               </label>
               <select
                 value={intercrop}
                 onChange={(e) => setIntercrop(e.target.value)}
                 className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726]"
               >
-                <option value="Yego (Ibigori n'ibishyimbo)">Yego (Ibigori n&apos;ibishyimbo)</option>
-                <option value="Yego (Ibinyamisogwe n'imyumbati)">Yego (Ibinyamisogwe n&apos;imyumbati)</option>
-                <option value="Yego (Ibindi bihuzwa)">Yego (Ibindi bihuzwa)</option>
-                <option value="Oya (Ibihingwa ntibivanze)">Oya (Ibihingwa ntibivanze)</option>
+                <option value="Yes (Maize & Beans)">Yes (Maize & Beans / Ibigori n'ibishyimbo)</option>
+                <option value="Yes (Legumes & Cassava)">Yes (Legumes & Cassava / Ibinyamisogwe n'imyumbati)</option>
+                <option value="Yes (Other intercrop)">Yes (Other intercrop / Ibindi bihuzwa)</option>
+                <option value="No (Monoculture)">No (Monoculture / Oya)</option>
               </select>
             </div>
           </div>
@@ -283,13 +285,13 @@ export default function MyFarmPage() {
           {/* Crops */}
           <div>
             <label className="block text-xs font-bold text-gray-700 mb-1">
-              Ibihingwa bihingwa muri uyu murima
+              {t.farm.cropsInput}
             </label>
             <input
               type="text"
               value={crops}
               onChange={(e) => setCrops(e.target.value)}
-              placeholder="urugero: Ibigori, Ibishyimbo, Soya"
+              placeholder="e.g. Maize, Beans, Soybeans"
               className="w-full rounded-xl border border-gray-200 bg-gray-50/50 p-2.5 text-sm text-gray-900 focus:border-[#145726] focus:outline-none focus:ring-1 focus:ring-[#145726] mb-2"
             />
             {/* Quick badges */}
@@ -328,7 +330,7 @@ export default function MyFarmPage() {
                 onClick={() => setIsEditing(false)}
                 className="rounded-xl border border-gray-300 px-4 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50"
               >
-                Kureka
+                {t.farm.cancel}
               </button>
             )}
 
@@ -340,12 +342,12 @@ export default function MyFarmPage() {
               {saving ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin text-[#f5c518]" />
-                  <span>Birimo kubikwa...</span>
+                  <span>{t.farm.saving}</span>
                 </>
               ) : (
                 <>
                   <Save className="h-4 w-4 text-[#f5c518]" />
-                  <span>Bika Umurima</span>
+                  <span>{t.farm.save}</span>
                 </>
               )}
             </button>

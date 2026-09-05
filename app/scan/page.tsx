@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/components/AuthContext';
-import Image from 'next/image';
+import { useLanguage } from '@/components/LanguageContext';
 import Link from 'next/link';
 import {
   Camera,
@@ -18,31 +18,31 @@ import {
   Clock,
   Loader2,
   HelpCircle,
-  ExternalLink,
-  ChevronDown
+  ExternalLink
 } from 'lucide-react';
 import { ScanRecord, LearningContentItem, GeminiScanAnalysis } from '@/lib/types';
 
 const SAMPLE_IMAGES = [
   {
-    label: 'Ubutaka burimo isuri (Erosion sample)',
+    label: 'Erosion sample / Isuri',
     url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&auto=format&fit=crop&q=80',
-    description: 'Ubutaka butagira ibyatsi bubungabunga'
+    description: 'Uncovered slope / ubutaka butagira ibyatsi'
   },
   {
-    label: 'Umurima usasiwe neza (Mulched field)',
+    label: 'Mulched field / Gusasira',
     url: 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23982?w=800&auto=format&fit=crop&q=80',
-    description: 'Gusasira ukoresheje ibisigazwa by\'imyaka'
+    description: 'Crop residue mulch / gusasira'
   },
   {
-    label: 'Ibihingwa bivanze (Intercropping)',
+    label: 'Intercropping / Guhuza ibihingwa',
     url: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?w=800&auto=format&fit=crop&q=80',
-    description: 'Ibigori bivanze n\'ibinyamisogwe'
+    description: 'Corn & legumes / ibigori n\'ibishyimbo'
   }
 ];
 
 export default function FarmScanPage() {
   const { user, farm, setShowAuthModal } = useAuth();
+  const { t, language } = useLanguage();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
@@ -90,7 +90,6 @@ export default function FarmScanPage() {
   const selectSampleImage = async (sampleUrl: string) => {
     try {
       setError(null);
-      // Fetch sample and convert to base64
       const response = await fetch(sampleUrl);
       const blob = await response.blob();
       const reader = new FileReader();
@@ -112,19 +111,18 @@ export default function FarmScanPage() {
     }
 
     if (!selectedImage) {
-      setError('Nyabuneka banza uhitemo cyangwa ufate ifoto y\'umurima.');
+      setError(t.scan.chooseGallery);
       return;
     }
 
     setAnalyzing(true);
     setError(null);
-    setAnalysisStep('Gushyira ifoto muri Cloudinary...');
+    setAnalysisStep(t.scan.analyzingStep1);
 
     try {
-      // Determine farmId or create a fallback temporary farmId if not yet set
       const farmId = farm?.id || 'demo_farm_' + user.id;
 
-      setAnalysisStep('Gemini Vision AI irimo gusesengura ubutaka n\'ibihingwa...');
+      setAnalysisStep(t.scan.analyzingStep2);
 
       const res = await fetch('/api/scan', {
         method: 'POST',
@@ -136,11 +134,11 @@ export default function FarmScanPage() {
         }),
       });
 
-      setAnalysisStep('Gutegura inama zo kubungabunga ubutaka mu Kinyarwanda...');
+      setAnalysisStep(t.scan.analyzingStep3);
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Habaye ikibazo mu gusesengura ifoto.');
+        throw new Error(data.error || 'Analysis error occurred.');
       }
 
       setScanResult(data);
@@ -149,7 +147,7 @@ export default function FarmScanPage() {
       }
     } catch (err: any) {
       console.error('Scan error:', err);
-      setError(err.message || 'Habaye ikibazo mu isuzuma. Ongera ugerageze.');
+      setError(err.message || 'Error conducting scan.');
     } finally {
       setAnalyzing(false);
       setAnalysisStep('');
@@ -169,17 +167,17 @@ export default function FarmScanPage() {
         <div>
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-forest-700 uppercase tracking-wider mb-1">
             <Camera className="h-4 w-4" />
-            <span>AI Farm Vision Scanner</span>
+            <span>AI Farm Vision Scanner (Bilingual EN & RW)</span>
           </div>
-          <h1 className="text-2xl font-black text-gray-900">Gusuzuma Umurima n&apos;Ubutaka</h1>
+          <h1 className="text-2xl font-black text-gray-900">{t.scan.title}</h1>
           <p className="text-xs sm:text-sm text-gray-600">
-            Fata ifoto y&apos;ubutaka, ibihingwa, cyangwa isuri. AI iratanga isuzuma n&apos;inama z&apos;ubuhinzi bubungabunga ubutaka mu Kinyarwanda.
+            {t.scan.subtitle}
           </p>
         </div>
 
         {farm && (
           <div className="text-left sm:text-right bg-white p-2 sm:p-0 rounded-xl border sm:border-0 border-gray-100">
-            <span className="text-[11px] text-gray-500 block">Umurima watoranyijwe:</span>
+            <span className="text-[11px] text-gray-500 block">{t.scan.selectedFarm}</span>
             <span className="text-xs font-bold text-forest-800">{farm.district} ({farm.location_text})</span>
           </div>
         )}
@@ -192,14 +190,14 @@ export default function FarmScanPage() {
             {/* Dropzone & Buttons */}
             <div className="border-2 border-dashed border-[#145726]/30 rounded-2xl p-5 sm:p-10 text-center hover:border-[#145726] transition bg-[#f2f8f2]">
               <div className="h-14 w-14 sm:h-16 sm:w-16 mx-auto rounded-2xl bg-[#145726] text-white flex items-center justify-center mb-3 sm:mb-4 shadow-xs relative">
-                <Camera className="h-7 w-7 sm:h-8 sm:w-8" />
+                <Camera className="h-7 w-7 sm:h-8 sm:w-8 text-[#f5c518]" />
                 <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-[#f5c518] border-2 border-white" />
               </div>
               <h3 className="text-sm sm:text-base font-black text-gray-900 mb-1">
-                Fata Ifoto cyangwa Hitamo mu Bubiko
+                {t.scan.dropzoneTitle}
               </h3>
               <p className="text-xs text-gray-600 max-w-md mx-auto mb-5 leading-relaxed">
-                Ifoto yerekana ubutaka, imyaka, gusasira cyangwa ibimenyetso by&apos;isuri ifasha AI gukora isuzuma ryizewe.
+                {t.scan.dropzoneDesc}
               </p>
 
               {/* Hidden Inputs for File and Camera */}
@@ -226,7 +224,7 @@ export default function FarmScanPage() {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-3 border-[#f5c518] px-6 py-3.5 text-xs sm:text-sm font-black text-white shadow hover:bg-[#0f421d] transition active:scale-95"
                 >
                   <Camera className="h-4 w-4 text-[#f5c518]" />
-                  <span>Fata Ifoto n&apos;Aparaye (Camera)</span>
+                  <span>{t.scan.takePhoto}</span>
                 </button>
 
                 <button
@@ -235,7 +233,7 @@ export default function FarmScanPage() {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-xs sm:text-sm font-bold text-gray-700 hover:bg-gray-50 transition active:scale-95"
                 >
                   <Upload className="h-4 w-4 text-gray-600" />
-                  <span>Hitamo Ifoto (Gallery)</span>
+                  <span>{t.scan.chooseGallery}</span>
                 </button>
               </div>
             </div>
@@ -244,7 +242,7 @@ export default function FarmScanPage() {
             <div>
               <div className="flex items-center gap-1.5 text-xs font-bold text-gray-700 mb-2">
                 <Sparkles className="h-3.5 w-3.5 text-[#145726]" />
-                <span>Cyangwa gerageza n&apos;ifoto y&apos;icyitegererezo (Demo Samples):</span>
+                <span>{t.scan.demoSamples}</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {SAMPLE_IMAGES.map((sample, idx) => (
@@ -278,7 +276,7 @@ export default function FarmScanPage() {
             <div className="relative rounded-2xl overflow-hidden bg-black/5 max-h-[380px] flex items-center justify-center border border-gray-200">
               <img
                 src={selectedImage}
-                alt="Ifoto y'umurima yatoranyijwe"
+                alt="Selected field image"
                 className="max-h-[380px] w-auto object-contain rounded-2xl"
               />
               {!analyzing && (
@@ -287,7 +285,7 @@ export default function FarmScanPage() {
                   className="absolute top-3 right-3 bg-black/70 hover:bg-black text-white px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur transition flex items-center gap-1"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
-                  <span>Hindura Ifoto</span>
+                  <span>{t.scan.changePhoto}</span>
                 </button>
               )}
             </div>
@@ -297,7 +295,7 @@ export default function FarmScanPage() {
               <div className="rounded-xl bg-red-50 p-4 text-xs sm:text-sm text-red-800 border border-red-200 flex items-start gap-2.5">
                 <AlertTriangle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="font-bold">Habaye ikibazo: </strong>
+                  <strong className="font-bold">Error: </strong>
                   <span>{error}</span>
                 </div>
               </div>
@@ -306,12 +304,12 @@ export default function FarmScanPage() {
             {/* Analyzing State Indicator */}
             {analyzing && (
               <div className="rounded-2xl bg-forest-50 border border-forest-200 p-6 text-center space-y-3">
-                <Loader2 className="h-8 w-8 text-forest-700 animate-spin mx-auto" />
+                <Loader2 className="h-8 w-8 text-forest-700 animate-spin mx-auto text-[#145726]" />
                 <h4 className="text-sm font-bold text-forest-950">
-                  Incuti AI irimo gusesengura ifoto y&apos;umurima...
+                  {t.scan.analyzingTitle}
                 </h4>
                 <p className="text-xs text-forest-700 font-medium">
-                  {analysisStep || 'Gusesengura isuri, ubuhehere n\'indwara...'}
+                  {analysisStep}
                 </p>
               </div>
             )}
@@ -322,10 +320,10 @@ export default function FarmScanPage() {
                 <button
                   type="button"
                   onClick={handleStartScan}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-forest-700 px-8 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-forest-800 transition active:scale-95"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] px-8 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#0f421d] transition active:scale-95"
                 >
-                  <Sparkles className="h-4 w-4" />
-                  <span>Tangira Isuzuma rya AI (Analyze Now)</span>
+                  <Sparkles className="h-4 w-4 text-[#f5c518]" />
+                  <span>{t.scan.analyzeButton}</span>
                 </button>
               </div>
             )}
@@ -352,12 +350,12 @@ export default function FarmScanPage() {
                       )}
                       <div>
                         <span className="text-[11px] font-bold uppercase tracking-wider block opacity-75">
-                          Urwego rw&apos;Ibyago (Risk Level)
+                          {t.scan.riskLevel}
                         </span>
                         <h3 className="text-lg font-black">
-                          {scanResult.analysis.risk_level === 'low' && 'Ibyago Bike (Umutekano w\'ubutaka uri hejuru)'}
-                          {scanResult.analysis.risk_level === 'moderate' && 'Ibyago Biraringaniye (Hakenewe gusasira no kurinda ubutaka)'}
-                          {scanResult.analysis.risk_level === 'high' && 'Ibyago Bikabije (Ubutaka n\'ibihingwa bikeneye ubutabazi bwihuse)'}
+                          {scanResult.analysis.risk_level === 'low' && t.scan.riskLow}
+                          {scanResult.analysis.risk_level === 'moderate' && t.scan.riskModerate}
+                          {scanResult.analysis.risk_level === 'high' && t.scan.riskHigh}
                         </h3>
                       </div>
                     </div>
@@ -371,7 +369,7 @@ export default function FarmScanPage() {
                           ? 'bg-red-200/80 text-red-900'
                           : 'bg-yellow-200/80 text-yellow-900'
                       }`}>
-                        Icyizere: {scanResult.analysis.confidence || 'medium'}
+                        {t.scan.confidence} {scanResult.analysis.confidence || 'medium'}
                       </span>
                     </div>
                   </div>
@@ -381,37 +379,35 @@ export default function FarmScanPage() {
                     <div className="mt-3 p-3 bg-white/80 rounded-xl border border-red-200 text-xs text-red-900 flex items-start gap-2">
                       <HelpCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
                       <div>
-                        <strong>Inama y&apos;Inzobere: </strong>
-                        Iyi foto ntiyari ifite urumuri cyangwa ubusobanuro buhagije. Turakugira inama yo
-                        <strong> kwegera Umujyanama w&apos;Ubuhinzi (Agronome / Extension Officer)</strong> ku biro by&apos;umurenge wawe kugira ngo asuzume umurima imbonankubone.
+                        {t.scan.lowConfidenceWarning}
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Observation in Kinyarwanda */}
+                {/* Observation (Bilingual EN & RW) */}
                 <div className="rounded-2xl bg-gray-50 p-5 border border-gray-200">
                   <h4 className="text-xs font-bold uppercase text-gray-500 tracking-wider mb-2">
-                    Ibyagaragaye mu Ifoto (Observation)
+                    {t.scan.observation}
                   </h4>
-                  <p className="text-sm sm:text-base font-semibold text-gray-900 leading-relaxed">
+                  <p className="text-sm sm:text-base font-semibold text-gray-900 leading-relaxed whitespace-pre-line">
                     {scanResult.analysis.observation}
                   </p>
                 </div>
 
-                {/* Actionable Recommendations Checklist */}
+                {/* Actionable Recommendations Checklist (Bilingual EN & RW) */}
                 <div className="rounded-2xl bg-forest-50/50 p-5 border border-forest-200">
                   <h4 className="text-xs font-bold uppercase text-forest-900 tracking-wider mb-3 flex items-center gap-1.5">
                     <CheckCircle2 className="h-4 w-4 text-forest-700" />
-                    <span>Inama n&apos;Ibikorwa Byihutirwa (Actionable Recommendations)</span>
+                    <span>{t.scan.recommendations}</span>
                   </h4>
                   <ul className="space-y-2.5">
                     {scanResult.analysis.recommendations.map((rec, index) => (
                       <li key={index} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-800">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-forest-600 text-[10px] font-bold text-white shrink-0 mt-0.5">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#145726] text-[10px] font-bold text-white shrink-0 mt-0.5">
                           {index + 1}
                         </span>
-                        <span className="leading-snug">{rec}</span>
+                        <span className="leading-snug whitespace-pre-line">{rec}</span>
                       </li>
                     ))}
                   </ul>
@@ -421,24 +417,24 @@ export default function FarmScanPage() {
                 {scanResult.analysis.explanation && (
                   <div className="rounded-2xl bg-earth-50/60 p-5 border border-earth-200">
                     <h4 className="text-xs font-bold uppercase text-earth-900 tracking-wider mb-1.5">
-                      Impamvu ari ingenzi (Explanation)
+                      {t.scan.explanation}
                     </h4>
-                    <p className="text-xs sm:text-sm text-earth-950 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-earth-950 leading-relaxed whitespace-pre-line">
                       {scanResult.analysis.explanation}
                     </p>
                   </div>
                 )}
 
-                {/* Related Learning Content ("Learn More" linked to related_risk_tags) */}
+                {/* Related Learning Content */}
                 {scanResult.related_learning && scanResult.related_learning.length > 0 && (
                   <div className="space-y-3 pt-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-bold uppercase text-gray-900 tracking-wider flex items-center gap-1.5">
                         <BookOpen className="h-4 w-4 text-forest-700" />
-                        <span>Amasomo Ahuye N&apos;Ibi Bibazo (Learn More)</span>
+                        <span>{t.scan.relatedLearning}</span>
                       </h4>
                       <Link href="/learn" className="text-xs font-semibold text-forest-700 hover:underline">
-                        Reba amasomo yose &rarr;
+                        {t.scan.viewAllLessons} &rarr;
                       </Link>
                     </div>
 
@@ -467,14 +463,14 @@ export default function FarmScanPage() {
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-xs font-bold text-forest-700 hover:text-forest-900"
                             >
-                              <span>Reba Amashusho</span>
+                              <span>{t.scan.watchVideo}</span>
                               <ExternalLink className="h-3 w-3" />
                             </a>
                             <Link
                               href={`/learn?tag=${item.related_risk_tags.split(',')[0]}`}
                               className="text-[11px] text-gray-500 hover:underline"
                             >
-                              Soma Byinshi
+                              {t.scan.readMore}
                             </Link>
                           </div>
                         </div>
@@ -490,14 +486,14 @@ export default function FarmScanPage() {
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"
                   >
                     <RefreshCw className="h-4 w-4" />
-                    <span>Fata Indi Foto (Scan Another)</span>
+                    <span>{t.scan.scanAnother}</span>
                   </button>
 
                   <Link
                     href="/actions"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-forest-700 px-6 py-2.5 text-xs font-bold text-white shadow hover:bg-forest-800 transition"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#145726] border-b-2 border-[#f5c518] px-6 py-2.5 text-xs font-bold text-white shadow hover:bg-[#0f421d] transition"
                   >
-                    <span>Injiza Igikorwa mu Mateka (Log Action)</span>
+                    <span>{t.scan.logAction}</span>
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -513,9 +509,9 @@ export default function FarmScanPage() {
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
               <Clock className="h-4 w-4 text-forest-700" />
-              <span>Amateka y&apos;Ibisuzumwa by&apos;Umurima (Scan History)</span>
+              <span>{t.scan.scanHistory}</span>
             </h3>
-            <span className="text-xs text-gray-500">{pastScans.length} byasuzumwe</span>
+            <span className="text-xs text-gray-500">{pastScans.length} {t.scan.scansCount}</span>
           </div>
 
           <div className="space-y-3">
@@ -548,7 +544,7 @@ export default function FarmScanPage() {
                           ? 'bg-red-100 text-red-800'
                           : 'bg-amber-100 text-amber-800'
                       }`}>
-                        {scan.risk_level === 'low' ? 'Ibyago Bike' : scan.risk_level === 'high' ? 'Ibyago Bikabije' : 'Iringaniye'}
+                        {scan.risk_level === 'low' ? 'Low / Bike' : scan.risk_level === 'high' ? 'High / Bikabije' : 'Moderate / Biraringaniye'}
                       </span>
                       <span className="text-[11px] text-gray-400">
                         {new Date(scan.created_at).toLocaleDateString()}
@@ -562,7 +558,7 @@ export default function FarmScanPage() {
 
                 <div className="text-left sm:text-right shrink-0">
                   <span className="text-[11px] text-forest-700 font-bold block">
-                    {scan.recommendations?.length || 0} Inama zatanzwe
+                    {scan.recommendations?.length || 0} {t.scan.recommendationsCount}
                   </span>
                 </div>
               </div>

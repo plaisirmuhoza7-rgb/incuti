@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from './AuthContext';
+import { useLanguage, LanguageToggle } from './LanguageContext';
 import {
   Home,
   Camera,
@@ -11,23 +12,23 @@ import {
   CheckSquare,
   BookOpen,
   MessageSquare,
-  User,
   LogOut,
   LogIn
 } from 'lucide-react';
 
-const NAV_ITEMS = [
-  { href: '/', label: 'Ahabanza', icon: Home },
-  { href: '/scan', label: 'Gusuzuma', icon: Camera, highlight: true },
-  { href: '/farm', label: 'Umurima', icon: Sprout },
-  { href: '/actions', label: 'Ibikorwa', icon: CheckSquare },
-  { href: '/learn', label: 'Amasomo', icon: BookOpen },
-  { href: '/chat', label: 'Incuti Bot', icon: MessageSquare },
-];
-
 export default function Navigation() {
   const pathname = usePathname();
   const { user, setShowAuthModal, logout } = useAuth();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { href: '/', label: t.nav.home, icon: Home },
+    { href: '/scan', label: t.nav.scan, icon: Camera, highlight: true },
+    { href: '/farm', label: t.nav.farm, icon: Sprout },
+    { href: '/actions', label: t.nav.actions, icon: CheckSquare },
+    { href: '/learn', label: t.nav.learn, icon: BookOpen },
+    { href: '/chat', label: t.nav.chat, icon: MessageSquare },
+  ];
 
   return (
     <>
@@ -44,7 +45,7 @@ export default function Navigation() {
           </Link>
 
           <nav className="flex items-center gap-1">
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
@@ -64,7 +65,10 @@ export default function Navigation() {
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Language Toggle */}
+            <LanguageToggle />
+
             {user ? (
               <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200/60">
                 <div className="text-right">
@@ -73,7 +77,7 @@ export default function Navigation() {
                 </div>
                 <button
                   onClick={logout}
-                  title="Sohoka"
+                  title={t.nav.logout}
                   className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-600 hover:bg-red-50 transition"
                 >
                   <LogOut className="h-3.5 w-3.5" />
@@ -85,7 +89,7 @@ export default function Navigation() {
                 className="flex items-center gap-1.5 rounded-full bg-[#145726] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#0f421d] shadow-xs transition active:scale-95"
               >
                 <LogIn className="h-3.5 w-3.5 text-amber-300" />
-                <span>Injira</span>
+                <span>{t.nav.login}</span>
               </button>
             )}
           </div>
@@ -94,7 +98,7 @@ export default function Navigation() {
 
       {/* Mobile Top Header */}
       <header className="sticky top-0 z-40 md:hidden bg-white/90 backdrop-blur-md border-b border-emerald-900/5">
-        <div className="px-4 py-3 flex items-center justify-between">
+        <div className="px-4 py-2.5 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-lg bg-[#145726] flex items-center justify-center text-white shadow-xs">
               <Sprout className="h-4 w-4" />
@@ -102,28 +106,25 @@ export default function Navigation() {
             <span className="font-bold text-base text-emerald-950 tracking-tight">Incuti</span>
           </Link>
 
-          <div>
+          <div className="flex items-center gap-2">
+            {/* Language Toggle on Mobile Top Header */}
+            <LanguageToggle />
+
             {user ? (
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
-                  <User className="h-3 w-3 text-emerald-700" />
-                  <span className="max-w-[90px] truncate">{user.name.split(' ')[0]}</span>
-                </div>
-                <button
-                  onClick={logout}
-                  title="Sohoka"
-                  className="h-7 w-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-red-600 hover:bg-red-50 transition"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                </button>
-              </div>
+              <button
+                onClick={logout}
+                title={t.nav.logout}
+                className="h-7 w-7 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-red-600 hover:bg-red-50 transition"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+              </button>
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="flex items-center gap-1 text-xs font-semibold text-white bg-[#145726] px-3.5 py-1.5 rounded-full shadow-xs active:scale-95 transition"
+                className="flex items-center gap-1 text-xs font-semibold text-white bg-[#145726] px-3 py-1 rounded-full shadow-xs active:scale-95 transition"
               >
                 <LogIn className="h-3.5 w-3.5 text-amber-300" />
-                <span>Injira</span>
+                <span>{t.nav.login}</span>
               </button>
             )}
           </div>
@@ -132,7 +133,7 @@ export default function Navigation() {
 
       {/* Mobile Bottom Fixed Navigation Bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/60 px-2 py-1.5 flex items-center justify-around shadow-lg">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
           return (
@@ -160,5 +161,3 @@ export default function Navigation() {
     </>
   );
 }
-
-

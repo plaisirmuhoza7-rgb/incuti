@@ -11,6 +11,16 @@ function getGeminiModel(modelName: string = 'gemini-3.6-flash') {
   return genAI.getGenerativeModel({ model: modelName });
 }
 
+export function removeAsterisks(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/\*/g, '')
+    .split('\n')
+    .map((line) => line.trim())
+    .join('\n')
+    .trim();
+}
+
 export async function analyzeFarmImageWithGemini(
   base64Data: string,
   mimeType: string = 'image/jpeg'
@@ -20,28 +30,30 @@ export async function analyzeFarmImageWithGemini(
   const prompt = `You are an agricultural conservation assistant for Rwandan smallholder farmers.
 Analyze this farm photo. Respond ONLY in valid JSON, no markdown, no preamble:
 {
-  "observation": "<short observation in Kinyarwanda>",
+  "observation": "🇬🇧 <observation in English>\n\n🇷🇼 <observation in Kinyarwanda>",
   "risk_level": "low" | "moderate" | "high",
-  "recommendations": ["<action in Kinyarwanda>", ...],
-  "explanation": "<why this matters, 1-2 sentences, in Kinyarwanda>",
+  "recommendations": [
+    "🇬🇧 <action in English>\n🇷🇼 <action in Kinyarwanda>",
+    ...
+  ],
+  "explanation": "🇬🇧 <explanation in English>\n\n🇷🇼 <explanation in Kinyarwanda>",
   "confidence": "low" | "medium" | "high"
 }
-If confidence is "low", observation should state the image is not sufficient for a
-reliable assessment and recommend consulting an agricultural extension officer.
-Focus on: soil cover/erosion, visible crop disease/pest signs, mulching, general
-conservation practice indicators. Do not diagnose with false certainty.`;
+Provide responses in BOTH English and Kinyarwanda for every text field.
+If confidence is "low", observation should state in both languages that the image is not sufficient for a reliable assessment and recommend consulting an agricultural extension officer (Agronome).
+Focus on: soil cover/erosion, visible crop disease/pest signs, mulching, general conservation practice indicators. Do not diagnose with false certainty.`;
 
   if (!model) {
-    console.warn('GEMINI_API_KEY is not set. Returning a simulated realistic conservation assessment.');
+    console.warn('GEMINI_API_KEY is not set. Returning a simulated realistic bilingual conservation assessment.');
     return {
-      observation: "Ifoto igaragaza umurima urimo ubutaka bugaragara butapfutse neza (soil cover nke), hari ibimenyetso by'isuri y'amazi ndetse n'umwuma mu butaka.",
+      observation: "🇬🇧 Field photo shows exposed soil with low vegetative cover, visible water erosion channels, and dry soil surface.\n\n🇷🇼 Ifoto igaragaza umurima urimo ubutaka bugaragara butapfutse neza (soil cover nke), hari ibimenyetso by'isuri y'amazi ndetse n'umwuma mu butaka.",
       risk_level: "moderate",
       recommendations: [
-        "Sasira umurima ukoresheje ibyatsi byumye (mulching) kugira ngo ubuhehere bugume mu butaka.",
-        "Cukura imiringoti ifata amazi (trenches) ku gice gihanamye cy'umurima.",
-        "Fumbiza ifumbire y'imborera iboze neza mbere yo gutera ibihingwa bishya."
+        "🇬🇧 Apply grass or crop residue mulch to preserve soil moisture.\n🇷🇼 Sasira umurima ukoresheje ibyatsi byumye (mulching) kugira ngo ubuhehere bugume mu butaka.",
+        "🇬🇧 Dig water infiltration trenches (terracing) along contour lines.\n🇷🇼 Cukura imiringoti ifata amazi (trenches) ku gice gihanamye cy'umurima.",
+        "🇬🇧 Apply well-decomposed organic compost before planting new crops.\n🇷🇼 Fumbiza ifumbire y'imborera iboze neza mbere yo gutera ibihingwa bishya."
       ],
-      explanation: "Gusasira no kurwanya isuri birinda ubutaka gutwarwa n'imvura kandi bikongera umusaruro w'ibihingwa mu bihe by'izuba.",
+      explanation: "🇬🇧 Mulching and soil erosion control preserve soil nutrients, prevent runoff, and boost crop yields during dry seasons.\n\n🇷🇼 Gusasira no kurwanya isuri birinda ubutaka gutwarwa n'imvura kandi bikongera umusaruro w'ibihingwa mu bihe by'izuba.",
       confidence: "high"
     };
   }
@@ -76,23 +88,23 @@ conservation practice indicators. Do not diagnose with false certainty.`;
 
     // Validate structure
     return {
-      observation: parsed.observation || "Isubiramo ry'isuzuma ryarangiye.",
+      observation: parsed.observation || "🇬🇧 Analysis completed.\n\n🇷🇼 Isubiramo ry'isuzuma ryarangiye.",
       risk_level: ['low', 'moderate', 'high'].includes(parsed.risk_level) ? parsed.risk_level : 'moderate',
-      recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : [parsed.recommendations || "Gana umujyanama w'ubuhinzi."],
-      explanation: parsed.explanation || "Ubuhinzi bubungabunga ubutaka butanga umusaruro urambye.",
+      recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : [parsed.recommendations || "Consult an agricultural extension officer / Gana umujyanama w'ubuhinzi."],
+      explanation: parsed.explanation || "🇬🇧 Conservation agriculture ensures long-term soil productivity.\n\n🇷🇼 Ubuhinzi bubungabunga ubutaka butanga umusaruro urambye.",
       confidence: ['low', 'medium', 'high'].includes(parsed.confidence) ? parsed.confidence : 'medium',
     };
   } catch (error) {
     console.error('Gemini vision analysis error:', error);
     // Return low confidence fallback recommending extension officer
     return {
-      observation: "Ifoto ntiyashoboye gusesengurwa neza cyangwa ifite ikibazo cy'uburambe. Turakugira inama yo kwegera umujyanama w'ubuhinzi (Agronome / Extension Officer) ku murenge.",
+      observation: "🇬🇧 Image quality was insufficient for complete analysis. We recommend consulting a local Agricultural Extension Officer (Agronome).\n\n🇷🇼 Ifoto ntiyashoboye gusesengurwa neza cyangwa ifite ikibazo cy'uburambe. Turakugira inama yo kwegera umujyanama w'ubuhinzi (Agronome / Extension Officer) ku murenge.",
       risk_level: "moderate",
       recommendations: [
-        "Ongera ufate ifoto igaragara neza ifite urumuri rukwiye.",
-        "Gana umukozi ushinzwe ubuhinzi ku biro by'umurenge wawe."
+        "🇬🇧 Retake a clearer photo in good lighting.\n🇷🇼 Ongera ufate ifoto igaragara neza ifite urumuri rukwiye.",
+        "🇬🇧 Consult your local sector agricultural extension officer.\n🇷🇼 Gana umukozi ushinzwe ubuhinzi ku biro by'umurenge wawe."
       ],
-      explanation: "Kugira ngo ubone inama zizewe, ubutaka cyangwa igihingwa kigomba kugaragara neza.",
+      explanation: "🇬🇧 Accurate diagnosis requires clear visual details of the crop and soil.\n\n🇷🇼 Kugira ngo ubone inama zizewe, ubutaka cyangwa igihingwa kigomba kugaragara neza.",
       confidence: "low"
     };
   }
@@ -109,16 +121,23 @@ export async function askIncutiChat(
     : "- Akamaro ko Gusasira no Gupfuka Ubutaka (Mulching)\n- Gucukura Imiringoti no Gutera Ibyatsi by'Ubwatsi ku Misozi\n- Gukora no Gukoresha Ifumbire y'Imborera Iboshye Neza";
 
   const systemInstruction = `You are "Incuti Bot", a friendly, empathetic, and expert agricultural conservation assistant for Rwandan smallholder farmers.
-Respond ONLY in natural, encouraging, and clear Kinyarwanda.
-Keep answers short, practical, and easy to apply in the Rwandan farming context.
+You MUST respond in BOTH English AND Kinyarwanda for every question asked by the user (Bilingual response format).
+
+Format your response clearly with two sections:
+🇬🇧 **English:**
+[Provide a short, practical, encouraging answer in English]
+
+🇷🇼 **Kinyarwanda:**
+[Provide the equivalent answer in polite, natural Kinyarwanda (e.g. "Muraho muhinzi mwiza", "Turakugira inama")]
+
 When relevant to the farmer's question, recommend one of the following learning topics available in the Incuti Learning Hub:
 ${titlesList}
 
-Always be humble, respectful (use polite Kinyarwanda e.g. "Muraho muhinzi mwiza", "Turakugira inama"), and focus on conservation agriculture: soil cover, mulching, compost manure, agroforestry, minimum tillage, and erosion control.`;
+Keep answers concise, actionable, respectful, and focused on conservation agriculture: soil cover, mulching, compost manure, agroforestry, minimum tillage, and erosion control.`;
 
   if (!model) {
-    console.warn('GEMINI_API_KEY not set. Returning realistic Incuti Bot response in Kinyarwanda.');
-    return `Muraho muhinzi mwiza! Ndi Incuti Bot, umufasha wawe mu buhinzi bubungabunga ubutaka. Ku bijyanye n'ikibazo cyawe: Gusasira umurima n'ifumbire y'imborera ni ingenzi cyane mu kubungabunga ubutaka no kongera umusaruro. Turakugira inama yo gusoma isomo ryitwa "${availableLearningTitles[0] || "Akamaro ko Gusasira no Gupfuka Ubutaka"}" mu cyiciro cy'Amasomo!`;
+    console.warn('GEMINI_API_KEY not set. Returning realistic Incuti Bot bilingual response in English and Kinyarwanda.');
+    return `🇬🇧 **English:**\nHello dear farmer! I am Incuti Bot, your assistant for conservation agriculture. Regarding your question: mulching and organic compost are crucial for protecting soil moisture and increasing crop yields. We recommend reading the lesson "${availableLearningTitles[0] || "Benefits of Soil Mulching & Cover"}" in our Learning Hub!\n\n🇷🇼 **Kinyarwanda:**\nMuraho muhinzi mwiza! Ndi Incuti Bot, umufasha wawe mu buhinzi bubungabunga ubutaka. Ku bijyanye n'ikibazo cyawe: Gusasira umurima n'ifumbire y'imborera ni ingenzi cyane mu kubungabunga ubutaka no kongera umusaruro. Turakugira inama yo gusoma isomo ryitwa "${availableLearningTitles[0] || "Akamaro ko Gusasira no Gupfuka Ubutaka"}" mu cyiciro cy'Amasomo!`;
   }
 
   try {
@@ -130,7 +149,7 @@ Always be humble, respectful (use polite Kinyarwanda e.g. "Muraho muhinzi mwiza"
         },
         {
           role: 'model',
-          parts: [{ text: "Yego, nditeguye gufasha abahinzi b'i Rwanda mu Kinyarwanda gisesuye no kubagira inama nziza z'ubuhinzi bubungabunga ubutaka!" }],
+          parts: [{ text: "🇬🇧 **English:**\nHello! I am ready to help Rwandan farmers with expert conservation advice in both English and Kinyarwanda!\n\n🇷🇼 **Kinyarwanda:**\nYego, nditeguye gufasha abahinzi b'i Rwanda mu Kinyarwanda no mu Cyongereza zose zisesuye!" }],
         },
       ],
     });
@@ -139,6 +158,6 @@ Always be humble, respectful (use polite Kinyarwanda e.g. "Muraho muhinzi mwiza"
     return result.response.text();
   } catch (error) {
     console.error('Gemini chat error:', error);
-    return "Muraho! Hagaragaye ikibazo mu itumanaho. Turakugira inama yo kongera kugerageza cyangwa gusura igice cy'Amasomo kuri uru rubuga.";
+    return "🇬🇧 **English:**\nHello! A temporary connection issue occurred. Please try again or visit our Learning Hub.\n\n🇷🇼 **Kinyarwanda:**\nMuraho! Hagaragaye ikibazo mu itumanaho. Turakugira inama yo kongera kugerageza cyangwa gusura igice cy'Amasomo kuri uru rubuga.";
   }
 }

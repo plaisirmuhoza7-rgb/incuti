@@ -1,27 +1,32 @@
+'use client';
+
+import React from 'react';
 import Link from 'next/link';
 import { Sprout } from 'lucide-react';
-
-const FOOTER_LINKS = [
-  {
-    heading: 'Platform',
-    links: [
-      { label: 'Ahabanza', href: '/' },
-      { label: 'Gusuzuma Umurima', href: '/scan' },
-      { label: 'Umurima Wanjye', href: '/farm' },
-      { label: 'Ibikorwa Byakozwe', href: '/actions' },
-    ],
-  },
-  {
-    heading: 'Amatsiko & Inama',
-    links: [
-      { label: 'Amasomo y’ubuhinzi', href: '/learn' },
-      { label: 'Incuti Bot AI', href: '/chat' },
-    ],
-  },
-];
+import { useLanguage } from './LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
   const year = new Date().getFullYear();
+
+  const footerLinks = [
+    {
+      heading: t.footer.platformHeading,
+      links: [
+        { label: t.nav.home, href: '/' },
+        { label: t.nav.scan, href: '/scan' },
+        { label: t.nav.farm, href: '/farm' },
+        { label: t.nav.actions, href: '/actions' },
+      ],
+    },
+    {
+      heading: t.footer.learnHeading,
+      links: [
+        { label: t.nav.learn, href: '/learn' },
+        { label: t.nav.chat, href: '/chat' },
+      ],
+    },
+  ];
 
   return (
     <footer className="bg-black text-zinc-300 pb-24 md:pb-12 border-t border-zinc-900">
@@ -37,12 +42,12 @@ export default function Footer() {
               <span className="text-base font-bold text-white tracking-wide">Incuti</span>
             </div>
             <p className="text-xs text-zinc-400 leading-relaxed max-w-sm">
-              Urubuga rwihariye rw’abahinzi mu Rwanda — AI vision yo gusuzuma umurima, kurwanya isuri, no kurinda ubutaka.
+              {t.footer.desc}
             </p>
           </div>
 
           {/* Links */}
-          {FOOTER_LINKS.map((section) => (
+          {footerLinks.map((section) => (
             <div key={section.heading}>
               <h4 className="text-xs font-semibold text-zinc-200 uppercase tracking-wider mb-3">
                 {section.heading}
@@ -64,14 +69,12 @@ export default function Footer() {
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
-          <p>© {year} Incuti. Conservation Agriculture Platform, Rwanda.</p>
+          <p>© {year} {t.footer.copyright}</p>
           <p className="flex items-center gap-1.5 font-medium text-zinc-400">
-            <span>Powered by Gemini AI</span>
+            <span>{t.footer.powered}</span>
           </p>
         </div>
       </div>
     </footer>
   );
 }
-
-
