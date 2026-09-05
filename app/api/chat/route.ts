@@ -9,13 +9,14 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { userId, question } = body;
+    const { userId, question, lang } = body;
+    const language = lang === 'en' ? 'en' : 'rw';
 
     const currentUserId = userId || req.cookies.get('incuti_user_id')?.value || 'anonymous_farmer';
 
     if (!question || typeof question !== 'string' || !question.trim()) {
       return NextResponse.json(
-        { success: false, error: 'Baza ikibazo cyawe mu Kinyarwanda (Question is required).' },
+        { success: false, error: language === 'en' ? 'Please enter a question.' : 'Baza ikibazo cyawe mu Kinyarwanda (Question is required).' },
         { status: 400 }
       );
     }
@@ -24,8 +25,8 @@ export async function POST(req: NextRequest) {
     const learningItems = await getLearningContent();
     const availableTitles = learningItems.map((item) => item.title_kinyarwanda);
 
-    // Call Gemini chat assistant as "Incuti"
-    const rawAnswer = await askIncutiChat(question.trim(), availableTitles);
+    // Call Gemini chat assistant as "Incuti" with user's selected language
+    const rawAnswer = await askIncutiChat(question.trim(), availableTitles, language);
     const answer = removeAsterisks(rawAnswer);
 
     // Log Q&A to Google Sheets ChatLogs tab

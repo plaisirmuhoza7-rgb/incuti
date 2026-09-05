@@ -31,7 +31,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { farmId, image, mimeType } = body;
+    const { farmId, image, mimeType, lang, farmerNote } = body;
+    const language = lang === 'en' ? 'en' : 'rw';
 
     if (!farmId) {
       return NextResponse.json(
@@ -57,8 +58,8 @@ export async function POST(req: NextRequest) {
       imageUrl = image; // fallback to base64 uri if upload issues
     }
 
-    // 2. Analyze with Gemini Vision
-    const analysis = await analyzeFarmImageWithGemini(image, mimeType || 'image/jpeg');
+    // 2. Analyze with Gemini Vision using selected language and optional farmer note
+    const analysis = await analyzeFarmImageWithGemini(image, mimeType || 'image/jpeg', language, farmerNote || '');
 
     // 3. Save to Google Sheets Scans tab
     const scanRecord: ScanRecord = {

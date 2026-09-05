@@ -40,18 +40,29 @@ export default function IncutiChatPage() {
   const { user, setShowAuthModal } = useAuth();
   const { t, language } = useLanguage();
 
-  const initialWelcome = language === 'en'
-    ? `Hello dear farmer! I am Incuti Bot, your AI assistant for conservation agriculture in Rwanda.\nMy answers are generated in **BOTH English and Kinyarwanda**.\n\nAsk me any question about mulching, terracing, soil cover, compost manure, or crop health!`
-    : `Muraho neza muhinzi mwiza! Ndi Incuti Bot, umufasha wawe w'ubwenge buhangano (AI) mu buhinzi bubungabunga ubutaka mu Rwanda.\nIbisubizo byanjye bitangwa mu **Kinyarwanda n'Icyongereza (English & Kinyarwanda)**.\n\nMbaza ikibazo icyo ari cyo cyose ku gusasira, kurwanya isuri, ifumbire cyangwa imyaka yawe!`;
-
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
       sender: 'incuti',
-      text: initialWelcome,
+      text: t.chat.welcomeMessage,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
+
+  // Update welcome message if user switches language and no chat has started yet
+  useEffect(() => {
+    setMessages((prev) => {
+      if (prev.length === 1 && prev[0].id === 'welcome') {
+        return [{
+          id: 'welcome',
+          sender: 'incuti',
+          text: t.chat.welcomeMessage,
+          timestamp: prev[0].timestamp,
+        }];
+      }
+      return prev;
+    });
+  }, [language, t.chat.welcomeMessage]);
 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -92,12 +103,13 @@ export default function IncutiChatPage() {
         body: JSON.stringify({
           userId: user?.id || 'anonymous',
           question: query,
+          lang: language,
         }),
       });
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Habaye ikibazo mu itumanaho.');
+        throw new Error(data.error || (language === 'en' ? 'Connection error.' : 'Habaye ikibazo mu itumanaho.'));
       }
 
       const botMessage: Message = {
@@ -150,9 +162,9 @@ export default function IncutiChatPage() {
           <div>
             <h1 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-1.5 leading-tight">
               <span>{t.chat.title}</span>
-              <span className="text-[9px] font-bold uppercase bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <Globe className="h-3 w-3 text-amber-700" />
-                <span>RW & EN</span>
+              <span className="text-[9px] font-bold uppercase bg-forest-100 text-forest-800 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <Globe className="h-3 w-3 text-forest-700" />
+                <span>{t.chat.badge}</span>
               </span>
             </h1>
             <p className="text-[11px] text-gray-500">{t.chat.subtitle}</p>

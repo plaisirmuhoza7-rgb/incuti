@@ -18,7 +18,9 @@ import {
   Clock,
   Loader2,
   HelpCircle,
-  ExternalLink
+  ExternalLink,
+  MessageSquare,
+  Info
 } from 'lucide-react';
 import { ScanRecord, LearningContentItem, GeminiScanAnalysis } from '@/lib/types';
 
@@ -53,6 +55,7 @@ export default function FarmScanPage() {
     related_learning: LearningContentItem[];
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [farmerNote, setFarmerNote] = useState<string>('');
 
   const [pastScans, setPastScans] = useState<ScanRecord[]>([]);
   const [loadingPastScans, setLoadingPastScans] = useState(false);
@@ -131,6 +134,8 @@ export default function FarmScanPage() {
           farmId,
           image: selectedImage,
           mimeType: 'image/jpeg',
+          lang: language,
+          farmerNote: farmerNote.trim(),
         }),
       });
 
@@ -158,6 +163,7 @@ export default function FarmScanPage() {
     setSelectedImage(null);
     setScanResult(null);
     setError(null);
+    setFarmerNote('');
   };
 
   return (
@@ -311,6 +317,36 @@ export default function FarmScanPage() {
                 <p className="text-xs text-forest-700 font-medium">
                   {analysisStep}
                 </p>
+              </div>
+            )}
+
+            {/* Farmer Note Input */}
+            {!scanResult && (
+              <div className="rounded-2xl border border-[#145726]/20 bg-[#f2f8f2] p-4">
+                <label
+                  htmlFor="farmer-note"
+                  className="flex items-center gap-2 text-xs font-bold text-[#145726] uppercase tracking-wider mb-2"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  <span>{t.scan.noteLabel}</span>
+                </label>
+                <textarea
+                  id="farmer-note"
+                  value={farmerNote}
+                  onChange={(e) => setFarmerNote(e.target.value)}
+                  placeholder={t.scan.notePlaceholder}
+                  rows={3}
+                  maxLength={500}
+                  disabled={analyzing}
+                  className="w-full resize-none rounded-xl border border-[#145726]/25 bg-white px-4 py-3 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#145726]/40 focus:border-[#145726]/50 transition disabled:opacity-60"
+                />
+                <div className="flex items-center justify-between mt-1.5">
+                  <p className="text-[11px] text-gray-500 flex items-center gap-1">
+                    <Info className="h-3 w-3 text-[#145726]/60" />
+                    {t.scan.noteHint}
+                  </p>
+                  <span className="text-[11px] text-gray-400">{farmerNote.length}/500</span>
+                </div>
               </div>
             )}
 
