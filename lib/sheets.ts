@@ -487,7 +487,8 @@ export async function getActionsByFarmId(farmId: string): Promise<ActionRecord[]
 
 export async function getLearningContent(category?: string, tag?: string): Promise<LearningContentItem[]> {
   const client = await getSheetsClient();
-  let items: LearningContentItem[] = memoryStore.learning;
+  let items: LearningContentItem[] = SEED_LEARNING_CONTENT;
+  memoryStore.learning = [...SEED_LEARNING_CONTENT];
 
   if (client) {
     try {

@@ -71,15 +71,31 @@ function LearningHubContent() {
     );
   });
 
-  const getYoutubeEmbedUrl = (url: string) => {
+  const getYoutubeVideoId = (url: string) => {
     if (!url) return '';
     try {
       if (url.includes('youtube.com/watch?v=')) {
-        const id = url.split('v=')[1]?.split('&')[0];
-        return `https://www.youtube.com/embed/${id}`;
+        return url.split('v=')[1]?.split('&')[0] || '';
       } else if (url.includes('youtu.be/')) {
-        const id = url.split('youtu.be/')[1]?.split('?')[0];
-        return `https://www.youtube.com/embed/${id}`;
+        return url.split('youtu.be/')[1]?.split('?')[0] || '';
+      }
+      return '';
+    } catch {
+      return '';
+    }
+  };
+
+  const getYoutubeThumbnail = (url: string) => {
+    const videoId = getYoutubeVideoId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
+  };
+
+  const getYoutubeEmbedUrl = (url: string) => {
+    if (!url) return '';
+    try {
+      const videoId = getYoutubeVideoId(url);
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
       }
       return url;
     } catch {
@@ -189,8 +205,34 @@ function LearningHubContent() {
               className="rounded-2xl bg-white border border-gray-200 p-4 sm:p-5 shadow-xs hover:shadow-md hover:border-[#145726] transition flex flex-col justify-between group"
             >
               <div>
+                {/* Video Thumbnail Header with Play Overlay */}
+                <div
+                  onClick={() => setActiveVideoItem(item)}
+                  className="relative aspect-video w-full rounded-xl overflow-hidden bg-gray-900 mb-3 cursor-pointer group/thumb border border-gray-100 shadow-xs"
+                >
+                  {getYoutubeThumbnail(item.video_url) ? (
+                    <img
+                      src={getYoutubeThumbnail(item.video_url)}
+                      alt={item.title_kinyarwanda}
+                      className="w-full h-full object-cover group-hover/thumb:scale-105 transition duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#145726] to-forest-900">
+                      <BookOpen className="h-8 w-8 text-white/40" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/30 group-hover/thumb:bg-black/20 transition flex items-center justify-center">
+                    <div className="h-11 w-11 rounded-full bg-[#145726] text-white flex items-center justify-center shadow-lg transform group-hover/thumb:scale-110 transition border-2 border-white/80">
+                      <Play className="h-5 w-5 fill-current text-[#f5c518] ml-0.5" />
+                    </div>
+                  </div>
+                  <span className="absolute bottom-2 left-2 text-[10px] font-black uppercase bg-[#145726]/90 text-white px-2 py-0.5 rounded backdrop-blur-xs">
+                    {item.category}
+                  </span>
+                </div>
+
                 {/* Category & Tag */}
-                <div className="flex items-center justify-between gap-2 mb-2.5">
+                <div className="flex items-center justify-between gap-2 mb-2">
                   <span className="text-[10px] font-black uppercase bg-[#f2f8f2] text-[#145726] px-2 py-0.5 rounded-sm border border-[#d0e8d2]">
                     {item.category}
                   </span>
@@ -240,7 +282,7 @@ function LearningHubContent() {
       {/* Video Modal Player */}
       {activeVideoItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 sm:p-4 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-2xl max-h-[92dvh] overflow-y-auto rounded-2xl bg-white shadow-2xl border border-gray-200">
+          <div className="relative w-full max-w-3xl max-h-[92dvh] overflow-y-auto rounded-2xl bg-white shadow-2xl border border-gray-200">
             <div className="p-3.5 bg-gray-900 text-white flex items-center justify-between sticky top-0 z-10">
               <div className="min-w-0 pr-3">
                 <span className="text-[10px] font-bold text-[#f5c518] uppercase tracking-wider block">
@@ -263,7 +305,7 @@ function LearningHubContent() {
                 src={getYoutubeEmbedUrl(activeVideoItem.video_url)}
                 title={activeVideoItem.title_kinyarwanda}
                 className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               />
             </div>
