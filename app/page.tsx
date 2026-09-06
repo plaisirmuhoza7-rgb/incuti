@@ -160,8 +160,8 @@ export default function HomePage() {
             {/* Photo */}
             <div className="relative w-full sm:w-1/2 min-h-[260px] sm:min-h-auto">
               <Image
-                src="/scan_field.png"
-                alt="Aerial view of Rwandan terraced farm fields"
+                src="/scan.png"
+                alt="Scan crop disease preview"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 100vw, 50vw"
@@ -201,8 +201,8 @@ export default function HomePage() {
             {/* Photo */}
             <div className="relative w-full sm:w-1/2 min-h-[260px] sm:min-h-auto">
               <Image
-                src="/incuti_bot.png"
-                alt="Rwandan farmer using Incuti on mobile phone"
+                src="/bot.png"
+                alt="Incuti AI Assistant preview"
                 fill
                 className="object-cover object-top"
                 sizes="(max-width: 640px) 100vw, 50vw"
@@ -242,8 +242,8 @@ export default function HomePage() {
             {/* Photo */}
             <div className="relative w-full sm:w-1/2 min-h-[260px] sm:min-h-auto">
               <Image
-                src="/learn_photo.png"
-                alt="Books and green leaves for learning"
+                src="/lan.png"
+                alt="Learning center preview"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 100vw, 50vw"
@@ -291,8 +291,8 @@ export default function HomePage() {
             {/* Photo */}
             <div className="relative w-full sm:w-1/2 min-h-[260px] sm:min-h-auto">
               <Image
-                src="/farm_photo.png"
-                alt="Lush terraced farm hills in Rwanda"
+                src="/maize.png"
+                alt="My Farm maize preview"
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 100vw, 50vw"
